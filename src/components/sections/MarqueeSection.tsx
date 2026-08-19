@@ -44,11 +44,11 @@ export const MarqueeSection: React.FC = () => {
   return (
     <div
       ref={sectionRef}
-      className="bg-[#0C0C0C] pt-24 sm:pt-32 md:pt-40 pb-10 overflow-hidden flex flex-col gap-3"
+      className="bg-[#0C0C0C] pt-16 sm:pt-28 md:pt-40 pb-10 overflow-hidden flex flex-col gap-2.5 sm:gap-3"
     >
       {/* Row 1: Moves RIGHT on scroll */}
       <div
-        className="flex gap-3 whitespace-nowrap"
+        className="flex gap-2.5 sm:gap-3 whitespace-nowrap"
         style={{
           transform: `translateX(${offset - 200}px)`,
           willChange: 'transform',
@@ -59,7 +59,7 @@ export const MarqueeSection: React.FC = () => {
             key={`row1-${index}`}
             src={src}
             alt={`Dashboard preview ${index}`}
-            className="w-[420px] h-[270px] rounded-2xl object-cover flex-shrink-0 border border-[#D7E2EA]/10 shadow-lg"
+            className="w-[260px] sm:w-[340px] md:w-[420px] h-[170px] sm:h-[220px] md:h-[270px] rounded-xl sm:rounded-2xl object-cover flex-shrink-0 border border-[#D7E2EA]/10 shadow-lg"
             loading="lazy"
           />
         ))}
@@ -67,7 +67,7 @@ export const MarqueeSection: React.FC = () => {
 
       {/* Row 2: Moves LEFT on scroll */}
       <div
-        className="flex gap-3 whitespace-nowrap"
+        className="flex gap-2.5 sm:gap-3 whitespace-nowrap"
         style={{
           transform: `translateX(${-(offset - 200)}px)`,
           willChange: 'transform',
@@ -78,7 +78,7 @@ export const MarqueeSection: React.FC = () => {
             key={`row2-${index}`}
             src={src}
             alt={`Dashboard preview ${index}`}
-            className="w-[420px] h-[270px] rounded-2xl object-cover flex-shrink-0 border border-[#D7E2EA]/10 shadow-lg"
+            className="w-[260px] sm:w-[340px] md:w-[420px] h-[170px] sm:h-[220px] md:h-[270px] rounded-xl sm:rounded-2xl object-cover flex-shrink-0 border border-[#D7E2EA]/10 shadow-lg"
             loading="lazy"
           />
         ))}

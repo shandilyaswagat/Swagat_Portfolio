@@ -13,10 +13,10 @@ export const HeroSection: React.FC = () => {
   };
 
   return (
-    <section className="relative h-screen w-full flex flex-col justify-between overflow-x-clip bg-[#0C0C0C]">
+    <section className="relative min-h-[100dvh] h-[100dvh] w-full flex flex-col justify-between overflow-x-clip bg-[#0C0C0C]">
       {/* Navbar */}
-      <FadeIn delay={0} y={-20} className="w-full px-6 md:px-10 pt-6 md:pt-8 z-20">
-        <nav className="flex justify-between items-center w-full">
+      <FadeIn delay={0} y={-20} className="w-full px-4 sm:px-6 md:px-10 pt-5 sm:pt-6 md:pt-8 z-30">
+        <nav className="flex justify-between items-center w-full max-w-7xl mx-auto">
           {[
             { label: "About", id: "about" },
             { label: "Services", id: "services" },
@@ -26,7 +26,7 @@ export const HeroSection: React.FC = () => {
             <button
               key={link.id}
               onClick={() => scrollToSection(link.id)}
-              className="text-[#D7E2EA] font-medium uppercase tracking-wider text-sm md:text-lg lg:text-[1.4rem] hover:opacity-70 transition-opacity duration-200 cursor-pointer"
+              className="text-[#D7E2EA] font-medium uppercase tracking-wider text-[11px] xs:text-xs sm:text-base md:text-lg lg:text-[1.4rem] hover:opacity-70 transition-opacity duration-200 cursor-pointer"
             >
               {link.label}
             </button>
@@ -34,17 +34,17 @@ export const HeroSection: React.FC = () => {
         </nav>
       </FadeIn>
 
-      {/* Hero Heading */}
-      <div className="w-full overflow-hidden text-center z-0 px-2 sm:px-4 mt-6 sm:mt-4 md:-mt-5">
+      {/* Hero Heading Container */}
+      <div className="w-full overflow-hidden text-center z-10 px-2 sm:px-4 mt-2 sm:mt-4 md:-mt-5">
         <FadeIn delay={0.15} y={40}>
-          <h1 className="hero-heading font-black uppercase tracking-tight leading-none whitespace-nowrap w-full text-[10vw] sm:text-[11vw] md:text-[12vw] lg:text-[13vw]">
+          <h1 className="hero-heading font-black uppercase tracking-tight leading-none whitespace-nowrap w-full text-[10.5vw] sm:text-[11vw] md:text-[12vw] lg:text-[13vw]">
             Hi, i&apos;m swagat
           </h1>
         </FadeIn>
       </div>
 
-      {/* Hero Portrait */}
-      <div className="absolute left-1/2 -translate-x-1/2 z-10 w-[280px] sm:w-[360px] md:w-[440px] lg:w-[520px] top-1/2 -translate-y-1/2 sm:top-auto sm:translate-y-0 sm:bottom-0 pointer-events-auto">
+      {/* Hero Portrait - Positioned cleanly below title on mobile so text is 100% visible */}
+      <div className="absolute left-1/2 -translate-x-1/2 z-20 w-[220px] xs:w-[260px] sm:w-[350px] md:w-[440px] lg:w-[520px] bottom-36 sm:bottom-0 pointer-events-auto">
         <FadeIn delay={0.6} y={30}>
           <Magnet
             padding={150}
@@ -63,15 +63,15 @@ export const HeroSection: React.FC = () => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="w-full px-6 md:px-10 pb-7 sm:pb-8 md:pb-10 flex flex-wrap justify-between items-end gap-4 z-20">
-        <FadeIn delay={0.35} y={20}>
-          <p className="text-[#D7E2EA] font-light uppercase tracking-wide leading-snug max-w-[170px] sm:max-w-[240px] md:max-w-[300px]" style={{ fontSize: 'clamp(0.75rem, 1.3vw, 1.4rem)' }}>
+      <div className="w-full px-4 sm:px-6 md:px-10 pb-5 sm:pb-8 md:pb-10 flex flex-col sm:flex-row justify-between items-center sm:items-end gap-4 z-30 max-w-7xl mx-auto">
+        <FadeIn delay={0.35} y={20} className="w-full sm:w-auto text-center sm:text-left">
+          <p className="text-[#D7E2EA] font-light uppercase tracking-wide leading-snug mx-auto sm:mx-0 max-w-[280px] sm:max-w-[240px] md:max-w-[300px]" style={{ fontSize: 'clamp(0.75rem, 1.3vw, 1.4rem)' }}>
             a data analyst & automation specialist driven by crafting striking bi dashboards, web apps, and n8n workflows
           </p>
         </FadeIn>
 
-        <FadeIn delay={0.5} y={20} className="flex flex-wrap items-center gap-3 sm:gap-4">
-          {/* Download Resume Button - Matching Contact Button sizing and scale animation */}
+        <FadeIn delay={0.5} y={20} className="flex flex-row items-center justify-center sm:justify-end gap-3 sm:gap-4 w-full sm:w-auto">
+          {/* Download Resume Button */}
           <a
             href="/Swagat_DA.pdf"
             download="Swagat_Shandilya_Resume.pdf"
@@ -80,13 +80,13 @@ export const HeroSection: React.FC = () => {
             className="
               inline-flex items-center justify-center gap-2 rounded-full 
               border-2 border-[#D7E2EA] text-[#D7E2EA] font-medium uppercase tracking-widest 
-              px-8 py-3 sm:px-10 sm:py-3.5 md:px-12 md:py-4
-              text-xs sm:text-sm md:text-base
+              px-5 py-2.5 sm:px-8 sm:py-3.5 md:px-12 md:py-4
+              text-[11px] sm:text-sm md:text-base
               hover:bg-[#D7E2EA]/10
               transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-lg
             "
           >
-            <Download className="w-4 h-4 sm:w-5 sm:h-5 text-[#BBCCD7]" />
+            <Download className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-[#BBCCD7]" />
             <span>Resume</span>
           </a>
 

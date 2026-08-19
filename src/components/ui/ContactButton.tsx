@@ -21,9 +21,9 @@ export const ContactButton: React.FC<ContactButtonProps> = ({
       }}
       className={`
         rounded-full text-white font-medium uppercase tracking-widest
-        px-8 py-3 sm:px-10 sm:py-3.5 md:px-12 md:py-4
-        text-xs sm:text-sm md:text-base
-        transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer
+        px-5 py-2.5 sm:px-10 sm:py-3.5 md:px-12 md:py-4
+        text-[11px] sm:text-sm md:text-base
+        transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer whitespace-nowrap
         ${className}
       `}
     >
