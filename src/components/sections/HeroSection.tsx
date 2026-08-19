@@ -14,40 +14,37 @@ export const HeroSection: React.FC = () => {
 
   return (
     <section className="relative min-h-[100dvh] h-[100dvh] w-full flex flex-col justify-between overflow-x-clip bg-[#0C0C0C]">
-      {/* Top Group: Navbar + Hero Heading stacked together with tight spacing */}
-      <div className="w-full flex flex-col gap-3 sm:gap-4 z-30">
-        {/* Navbar */}
-        <FadeIn delay={0} y={-20} className="w-full px-4 sm:px-6 md:px-10 pt-4 sm:pt-6 md:pt-8">
-          <nav className="flex justify-between items-center w-full max-w-7xl mx-auto">
-            {[
-              { label: "About", id: "about" },
-              { label: "Services", id: "services" },
-              { label: "Projects", id: "projects" },
-              { label: "Contact", id: "contact" },
-            ].map((link) => (
-              <button
-                key={link.id}
-                onClick={() => scrollToSection(link.id)}
-                className="text-[#D7E2EA] font-medium uppercase tracking-wider text-[11px] xs:text-xs sm:text-base md:text-lg lg:text-[1.4rem] hover:opacity-70 transition-opacity duration-200 cursor-pointer"
-              >
-                {link.label}
-              </button>
-            ))}
-          </nav>
-        </FadeIn>
+      {/* Navbar */}
+      <FadeIn delay={0} y={-20} className="w-full px-4 sm:px-6 md:px-10 pt-5 sm:pt-6 md:pt-8 z-30">
+        <nav className="flex justify-between items-center w-full max-w-7xl mx-auto">
+          {[
+            { label: "About", id: "about" },
+            { label: "Services", id: "services" },
+            { label: "Projects", id: "projects" },
+            { label: "Contact", id: "contact" },
+          ].map((link) => (
+            <button
+              key={link.id}
+              onClick={() => scrollToSection(link.id)}
+              className="text-[#D7E2EA] font-medium uppercase tracking-wider text-[11px] xs:text-xs sm:text-base md:text-lg lg:text-[1.4rem] hover:opacity-70 transition-opacity duration-200 cursor-pointer"
+            >
+              {link.label}
+            </button>
+          ))}
+        </nav>
+      </FadeIn>
 
-        {/* Hero Heading Container - Sitting closely under navbar */}
-        <div className="w-full overflow-hidden text-center px-2 sm:px-4">
-          <FadeIn delay={0.15} y={40}>
-            <h1 className="hero-heading font-black uppercase tracking-tight leading-none whitespace-nowrap w-full text-[10.5vw] sm:text-[11vw] md:text-[12vw] lg:text-[13vw]">
-              Hi, i&apos;m swagat
-            </h1>
-          </FadeIn>
-        </div>
+      {/* Hero Heading Container */}
+      <div className="w-full overflow-hidden text-center z-10 px-2 sm:px-4 mt-2 sm:mt-4 md:-mt-5">
+        <FadeIn delay={0.15} y={40}>
+          <h1 className="hero-heading font-black uppercase tracking-tight leading-none whitespace-nowrap w-full text-[10.5vw] sm:text-[11vw] md:text-[12vw] lg:text-[13vw]">
+            Hi, i&apos;m swagat
+          </h1>
+        </FadeIn>
       </div>
 
-      {/* Hero Portrait - Floating face sitting nicely between title and bottom bar */}
-      <div className="absolute left-1/2 -translate-x-1/2 z-20 w-[230px] xs:w-[270px] sm:w-[350px] md:w-[440px] lg:w-[520px] top-[26%] sm:top-auto sm:bottom-0 pointer-events-auto">
+      {/* Hero Portrait - Positioned cleanly below title on mobile so text is 100% visible */}
+      <div className="absolute left-1/2 -translate-x-1/2 z-20 w-[220px] xs:w-[260px] sm:w-[350px] md:w-[440px] lg:w-[520px] bottom-36 sm:bottom-0 pointer-events-auto">
         <FadeIn delay={0.6} y={30}>
           <Magnet
             padding={150}
