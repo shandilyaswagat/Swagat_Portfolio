@@ -49,9 +49,9 @@ const PROJECTS: Project[] = [
     name: "Customer Retention & Churn Analytics",
     category: "PwC BI Suite",
     description: "Interactive Power BI dashboard suite and Python EDA cohort analysis identifying high-risk customer behavior and boosting dashboard speed by 35%.",
-    col1Img1: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055344_5eff02e0-87a5-41ce-b64f-eb08da8f33db.png&w=1280&q=85",
-    col1Img2: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055431_11d841fd-8b41-46a5-82e4-b04f2407a7d8.png&w=1280&q=85",
-    col2Img: "https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260412_055451_e317bf2d-28d4-48cc-86b0-6f72f25b6327.png&w=1280&q=85",
+    col1Img1: "/dashboards/Claim_Risk_Analysis.png",
+    col1Img2: "/dashboards/Indigo_Overall_Dashboard.jpg",
+    col2Img: "/dashboards/Uber_dashboard.png",
   },
 ];
 

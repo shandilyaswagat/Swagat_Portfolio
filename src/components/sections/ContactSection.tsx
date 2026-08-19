@@ -40,7 +40,7 @@ export const ContactSection: React.FC = () => {
           <div className="flex items-center gap-4">
             {/* LinkedIn */}
             <a
-              href="https://linkedin.com/in/shandilyaswagat"
+              href="https://www.linkedin.com/in/swagatshandilya/"
               target="_blank"
               rel="noopener noreferrer"
               className="flex-1 flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl border border-[#D7E2EA]/20 bg-[#D7E2EA]/5 hover:bg-[#D7E2EA]/10 transition-all duration-200 group"

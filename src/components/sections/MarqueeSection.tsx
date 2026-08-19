@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 const ROW1_IMAGES = [
+  "/dashboards/Claim_Risk_Analysis.png",
+  "/dashboards/Indigo_Overall_Dashboard.jpg",
+  "/dashboards/Uber_dashboard.png",
   "https://motionsites.ai/assets/hero-space-voyage-preview-eECLH3Yc.gif",
   "https://motionsites.ai/assets/hero-codenest-preview-Cgppc2qV.gif",
   "https://motionsites.ai/assets/hero-vex-ventures-preview-BczMFIiw.gif",
@@ -15,6 +18,9 @@ const ROW1_IMAGES = [
 ];
 
 const ROW2_IMAGES = [
+  "/dashboards/Uber_dashboard.png",
+  "/dashboards/Claim_Risk_Analysis.png",
+  "/dashboards/Indigo_Overall_Dashboard.jpg",
   "https://motionsites.ai/assets/hero-stellar-ai-preview-D3HL6bw1.gif",
   "https://motionsites.ai/assets/hero-xportfolio-preview-D4A8maiC.gif",
   "https://motionsites.ai/assets/hero-orbit-web3-preview-BXt4OttD.gif",
