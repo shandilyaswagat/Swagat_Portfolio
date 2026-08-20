@@ -1,7 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { FadeIn } from '../ui/FadeIn';
 import { LiveProjectButton } from '../ui/LiveProjectButton';
+import { LightboxModal } from '../ui/LightboxModal';
+import { Maximize2 } from 'lucide-react';
 
 interface Project {
   id: string;
@@ -50,7 +52,7 @@ const PROJECTS: Project[] = [
       "/dashboards/Claim_Risk_Analysis.png",
       "/dashboards/Insurance_Performance_Dashboard.png",
     ],
-    mainImage: "/dashboards/Uber_dashboard.png",
+    mainImage: "/dashboards/Insurance_Performance_Dashboard.png",
   },
   {
     id: "05",
@@ -70,9 +72,10 @@ interface CardProps {
   index: number;
   totalCards: number;
   progress: any;
+  onEnlarge: (title: string, imgSrc?: string, htmlPath?: string) => void;
 }
 
-const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress }) => {
+const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress, onEnlarge }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   
   const targetScale = 1 - (totalCards - 1 - index) * 0.03;
@@ -107,18 +110,18 @@ const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress
             </div>
           </div>
 
-          {/* Topmate Live Project Link */}
+          {/* Topmate Live Project Button */}
           {project.link && <LiveProjectButton href={project.link} />}
         </div>
 
         {/* Bottom Row Image Grid */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mt-4 h-full min-h-0">
-          {/* Left Column (40% width / 5 cols) - Dynamically renders 1 to N real images */}
+          {/* Left Column (40% width / 5 cols) - Dynamically renders project images with Enlarge button */}
           <div className="md:col-span-5 flex flex-col gap-4 h-full">
             {project.images.map((imgSrc, imgIndex) => (
               <div
                 key={imgIndex}
-                className="w-full rounded-[30px] sm:rounded-[40px] md:rounded-[50px] overflow-hidden flex-grow relative bg-[#141414] border border-[#D7E2EA]/10 shadow-md"
+                className="w-full rounded-[30px] sm:rounded-[40px] md:rounded-[50px] overflow-hidden flex-grow relative bg-[#141414] border border-[#D7E2EA]/10 shadow-md group"
                 style={{
                   height: project.images.length === 1 ? '100%' : 'calc(50% - 0.5rem)',
                 }}
@@ -129,12 +132,21 @@ const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress
                   className="w-full h-full object-cover rounded-[30px] sm:rounded-[40px] md:rounded-[50px]"
                   loading="lazy"
                 />
+
+                {/* Enlarge Hover Overlay */}
+                <button
+                  onClick={() => onEnlarge(`${project.name} — Image ${imgIndex + 1}`, imgSrc)}
+                  className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2 text-white text-xs font-medium uppercase tracking-widest cursor-pointer rounded-[30px] sm:rounded-[40px] md:rounded-[50px]"
+                >
+                  <Maximize2 className="w-4 h-4 text-[#B600A8]" />
+                  <span>Enlarge Image</span>
+                </button>
               </div>
             ))}
           </div>
 
-          {/* Right Column (60% width / 7 cols) - Cleanly fitted HTML Dashboard without corner bleed */}
-          <div className="md:col-span-7 h-full min-h-[220px] rounded-[30px] sm:rounded-[40px] md:rounded-[50px] overflow-hidden bg-[#0C0C0C] relative border border-[#D7E2EA]/10 shadow-inner isolate">
+          {/* Right Column (60% width / 7 cols) - Fitted HTML Dashboard or Tall Image with Enlarge Button */}
+          <div className="md:col-span-7 h-full min-h-[220px] rounded-[30px] sm:rounded-[40px] md:rounded-[50px] overflow-hidden bg-[#0C0C0C] relative border border-[#D7E2EA]/10 shadow-inner isolate group">
             {project.htmlPath ? (
               <div className="w-full h-full relative overflow-hidden rounded-[30px] sm:rounded-[40px] md:rounded-[50px] bg-[#0C0C0C] isolate">
                 <iframe
@@ -147,15 +159,33 @@ const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress
                   }}
                   loading="lazy"
                 />
+
+                {/* Enlarge Dashboard Button */}
+                <button
+                  onClick={() => onEnlarge(`${project.name} HTML Dashboard`, undefined, project.htmlPath)}
+                  className="absolute top-4 right-4 z-20 bg-black/80 hover:bg-[#B600A8] text-white text-xs font-medium uppercase tracking-wider px-4 py-2 rounded-full border border-white/20 transition-all cursor-pointer flex items-center gap-1.5 shadow-lg"
+                >
+                  <Maximize2 className="w-3.5 h-3.5" />
+                  <span>Enlarge View</span>
+                </button>
               </div>
             ) : (
               project.mainImage && (
-                <img
-                  src={project.mainImage}
-                  alt={`${project.name} main preview`}
-                  className="w-full h-full object-cover rounded-[30px] sm:rounded-[40px] md:rounded-[50px]"
-                  loading="lazy"
-                />
+                <div className="w-full h-full relative group">
+                  <img
+                    src={project.mainImage}
+                    alt={`${project.name} main preview`}
+                    className="w-full h-full object-cover rounded-[30px] sm:rounded-[40px] md:rounded-[50px]"
+                    loading="lazy"
+                  />
+                  <button
+                    onClick={() => onEnlarge(`${project.name} Main View`, project.mainImage)}
+                    className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2 text-white text-xs font-medium uppercase tracking-widest cursor-pointer rounded-[30px] sm:rounded-[40px] md:rounded-[50px]"
+                  >
+                    <Maximize2 className="w-4 h-4 text-[#B600A8]" />
+                    <span>Enlarge Image</span>
+                  </button>
+                </div>
               )
             )}
           </div>
@@ -167,6 +197,16 @@ const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress
 
 export const ProjectsSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [lightboxState, setLightboxState] = useState<{
+    isOpen: boolean;
+    title: string;
+    imageSrc?: string;
+    htmlPath?: string;
+  }>({
+    isOpen: false,
+    title: '',
+  });
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end'],
@@ -197,10 +237,27 @@ export const ProjectsSection: React.FC = () => {
               index={index}
               totalCards={PROJECTS.length}
               progress={scrollYProgress}
+              onEnlarge={(title, imgSrc, htmlPath) =>
+                setLightboxState({
+                  isOpen: true,
+                  title,
+                  imageSrc: imgSrc,
+                  htmlPath,
+                })
+              }
             />
           ))}
         </div>
       </div>
+
+      {/* Lightbox Modal */}
+      <LightboxModal
+        isOpen={lightboxState.isOpen}
+        onClose={() => setLightboxState({ isOpen: false, title: '' })}
+        title={lightboxState.title}
+        imageSrc={lightboxState.imageSrc}
+        htmlPath={lightboxState.htmlPath}
+      />
     </section>
   );
 };
