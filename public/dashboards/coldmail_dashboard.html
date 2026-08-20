@@ -60,6 +60,7 @@
             display: flex;
             align-items: center;
             gap: 0.8rem;
+            padding-right: 3.5rem;
         }
 
         .batch-limit-control {
@@ -103,31 +104,9 @@
         }
         .btn-init:hover { background-color: var(--accent-red-hover); }
 
-        /* Floating AI Support Button in Bottom Right */
+        /* Floating AI Support Button */
         .floating-ai-support {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            background-color: var(--bg-card);
-            border: 1px solid var(--accent-red);
-            color: #ffffff;
-            padding: 0.75rem 1.25rem;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            box-shadow: 0 4px 20px rgba(220, 38, 38, 0.35);
-            z-index: 9999;
-            transition: all 0.25s ease;
-        }
-        .floating-ai-support:hover {
-            background-color: var(--accent-red);
-            color: #ffffff;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(220, 38, 38, 0.55);
+            display: none;
         }
 
         .app-layout {
@@ -137,10 +116,10 @@
         }
 
         .sidebar {
-            width: 240px;
+            width: 170px;
             background-color: var(--bg-sidebar);
             border-right: 1px solid var(--border);
-            padding: 1.5rem 0;
+            padding: 1rem 0;
             display: flex; flex-direction: column;
         }
 
