@@ -1,0 +1,1831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobHunt | Executive Automation Platform</title>
+    <style>
+        :root {
+            --bg-body: #F7F7F5;
+            --bg-sidebar: #F7F7F5;
+            --bg-main: #FAFAF9;
+            --bg-card: #FFFFFF;
+            --bg-input: #FFFFFF;
+            --border-subtle: #E7E7E3;
+            --border-input: #D6D6D0;
+            --burgundy: #9E1B2C;
+            --burgundy-hover: #801220;
+            --burgundy-subtle: #FDF2F4;
+            --text-primary: #0F172A;
+            --text-secondary: #64748B;
+            --text-muted: #94A3B8;
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
+            --shadow-subtle: 0 1px 3px rgba(0,0,0,0.03);
+            --shadow-card: 0 1px 4px rgba(0,0,0,0.04);
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* App Shell Layout */
+        .app-layout {
+            display: flex; width: 100vw; height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            min-width: 240px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border-subtle);
+            padding: 1.5rem 0.85rem;
+            display: flex; flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .brand-header {
+            padding: 0 0.6rem 1.4rem 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        .brand-logo-svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .brand-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+        }
+
+        .sidebar-section-title {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 1rem 0.6rem 0.4rem 0.6rem;
+        }
+
+        .nav-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .nav-item {
+            padding: 0.55rem 0.75rem;
+            color: var(--text-secondary);
+            font-size: 0.88rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border-radius: var(--radius-md);
+            transition: all 0.15s ease;
+            position: relative;
+            user-select: none;
+            border-left: none !important;
+        }
+        .nav-item svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--text-secondary);
+            stroke-width: 1.8;
+            fill: none;
+            transition: stroke 0.15s ease;
+        }
+        .nav-item:hover {
+            color: var(--text-primary);
+            background-color: rgba(0, 0, 0, 0.035);
+        }
+        .nav-item:hover svg {
+            stroke: var(--text-primary);
+        }
+        
+        /* ACTIVE SIDEBAR STATE (Apple/Notion Elevated Light Style - NO BURGUNDY LEFT BORDER) */
+        .nav-item.active {
+            color: var(--text-primary);
+            background-color: #FFFFFF;
+            font-weight: 600;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.04);
+            border-left: none !important;
+        }
+        .nav-item.active svg {
+            stroke: var(--burgundy);
+        }
+
+        .sidebar-spacer {
+            flex: 1;
+        }
+
+        /* Main Content Container */
+        .main-content {
+            flex: 1;
+            background-color: var(--bg-main);
+            padding: 2.2rem 3rem;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .page-header {
+            margin-bottom: 1.8rem;
+        }
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.4px;
+            margin: 0 0 0.3rem 0;
+        }
+        .page-subtitle {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        /* Controls Bar */
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            background-color: var(--bg-card);
+            padding: 0.85rem 1.25rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-card);
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .action-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+        .action-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Buttons — STRICT IDENTICAL HEIGHT, SIZING, ALIGNMENT */
+        .btn-primary {
+            background-color: var(--burgundy);
+            color: #ffffff;
+            border: none;
+            padding: 0.45rem 1rem;
+            height: 34px;
+            border-radius: var(--radius-md);
+            font-size: 0.84rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            transition: background-color 0.15s ease;
+            box-sizing: border-box;
+            line-height: 1;
+        }
+        .btn-primary:hover {
+            background-color: var(--burgundy-hover);
+        }
+
+        .btn-secondary {
+            background-color: #ffffff;
+            color: var(--text-primary);
+            border: 1px solid var(--border-input);
+            padding: 0.45rem 0.9rem;
+            height: 34px;
+            border-radius: var(--radius-md);
+            font-size: 0.84rem;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            box-sizing: border-box;
+            line-height: 1;
+        }
+        .btn-secondary:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .input-number-sm {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-input);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            width: 58px;
+            height: 34px;
+            padding: 0.35rem 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .input-number-sm:focus {
+            outline: none;
+            border-color: var(--burgundy);
+        }
+
+        /* Section Cards */
+        .card-box {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-card);
+        }
+        .card-header-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Table Styling */
+        .data-table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        th {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+            background-color: #fdfdfd;
+            position: relative;
+        }
+        td {
+            padding: 0.9rem 1rem;
+            font-size: 0.88rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid #f1f5f9;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:hover td {
+            background-color: #fafafa;
+        }
+
+        .status-select {
+            background-color: #ffffff;
+            border: 1px solid var(--border-input);
+            color: var(--text-primary);
+            padding: 0.3rem 0.55rem;
+            border-radius: var(--radius-md);
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .status-select:focus {
+            outline: none;
+            border-color: var(--burgundy);
+        }
+
+        .score-badge {
+            font-weight: 700;
+            color: var(--burgundy);
+            background-color: var(--burgundy-subtle);
+            padding: 0.2rem 0.55rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.82rem;
+        }
+
+        .link-action {
+            color: var(--burgundy);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.84rem;
+        }
+        .link-action:hover {
+            text-decoration: underline;
+        }
+
+        .btn-delete {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 0.2rem 0.4rem;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            transition: color 0.15s ease;
+        }
+        .btn-delete:hover {
+            color: #ef4444;
+            background-color: #fef2f2;
+        }
+
+        /* Tooltip Info Icon */
+        .info-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            font-weight: 700;
+            font-style: normal;
+            cursor: pointer;
+            position: relative;
+            margin-left: 0.3rem;
+            vertical-align: middle;
+        }
+        .info-btn:hover {
+            background-color: var(--burgundy);
+            color: #ffffff;
+        }
+
+        /* SMART FLOATING PORTAL TOOLTIP */
+        .tooltip-portal {
+            position: fixed;
+            z-index: 999999;
+            background-color: #ffffff;
+            color: var(--text-primary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 0.75rem 0.9rem;
+            width: 260px;
+            font-size: 0.8rem;
+            font-weight: 400;
+            line-height: 1.4;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            pointer-events: none;
+            display: none;
+        }
+
+        /* Grid Layouts */
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 1.5rem;
+            align-items: start;
+        }
+        @media (max-width: 960px) { .layout-grid { grid-template-columns: 1fr; } }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+        @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+        .form-label {
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+        }
+        .form-input {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-input);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            padding: 0.6rem 0.8rem;
+            font-size: 0.88rem;
+            transition: border-color 0.15s ease;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--burgundy);
+            box-shadow: 0 0 0 3px rgba(158, 27, 44, 0.08);
+        }
+
+        /* Funnel & Calendar */
+        .funnel-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1.2rem; }
+        .funnel-grid .fstat:nth-child(5) { grid-column: span 4; }
+        .fstat {
+            background: #f8fafc; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 8px 2px; text-align: center; overflow: hidden; min-width: 0;
+        }
+        .fstat b { display: block; font-size: 15px; color: var(--text-primary); }
+        .fstat span { font-size: 8.5px; letter-spacing: 0.01em; color: var(--text-secondary); text-transform: uppercase; font-weight: 700; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .cal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .cal-title { font-weight: 700; color: var(--text-primary); font-size: 14px; }
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .cal-dow { font-size: 10px; color: var(--text-muted); text-align: center; padding: 2px 0; font-weight: 600; }
+        .cal-day {
+            aspect-ratio: 1; border-radius: var(--radius-sm); background: #f8fafc; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; color: var(--text-secondary); cursor: pointer; border: 1px solid var(--border-subtle); position: relative;
+        }
+        .cal-day:hover { background: #e2e8f0; }
+        .cal-day.has { background: var(--burgundy-subtle); color: var(--burgundy); font-weight: 700; border-color: rgba(158, 27, 44, 0.3); }
+        .cal-day.today { border: 2px solid var(--burgundy); }
+        .cal-day.today::after { content: ''; position: absolute; bottom: 2px; width: 4px; height: 4px; border-radius: 50%; background: var(--burgundy); }
+        .cal-day.selected { background: var(--burgundy) !important; color: #ffffff !important; font-weight: 800; border-color: var(--burgundy) !important; box-shadow: 0 2px 8px rgba(158, 27, 44, 0.4); }
+        .cal-day.selected.today::after { background: #ffffff; }
+        .cal-day .n { font-size: 9px; font-weight: 700; }
+        .cal-day.blank { background: transparent; border: none; cursor: default; }
+
+        /* Toggle Control */
+        .toggle-group { display: flex; align-items: center; gap: 0.75rem; }
+        .switch { position: relative; display: inline-block; width: 42px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #cbd5e1; transition: .2s; border-radius: 22px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px;
+            background-color: white; transition: .2s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--burgundy); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        /* Floating Minimal AI Support Card */
+        .floating-ai-support {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background-color: #ffffff;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 0.6rem 1.1rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            z-index: 9999;
+            transition: all 0.15s ease;
+        }
+        .floating-ai-support:hover {
+            border-color: var(--burgundy);
+            color: var(--burgundy);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.09);
+        }
+
+        /* Toast Popup */
+        .toast {
+            position: fixed; bottom: 1.5rem; left: 1.5rem;
+            background-color: #0F172A; color: #ffffff;
+            padding: 0.75rem 1.2rem; border-radius: var(--radius-md);
+            font-size: 0.86rem; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+        }
+
+        .tab-view { display: none; }
+        .tab-view.active-view { display: block; }
+
+        .filter-pill {
+            background: var(--burgundy-subtle);
+            border: 1px solid rgba(158, 27, 44, 0.2);
+            color: var(--burgundy);
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.2rem;
+            font-weight: 500;
+        }
+        .filter-pill span { cursor: pointer; font-weight: 700; }
+
+        /* ABOUT ME EDITORIAL LAYOUT (TARGETED REFINEMENT — NOTION EDITORIAL ESSENCE) */
+        .about-me-container {
+            max-width: 880px;
+            margin: 0;
+        }
+        .about-editorial-heading {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 1.5rem;
+            margin-top: 2.2rem;
+            margin-bottom: 0.85rem;
+        }
+        .logo-path-dark {
+            fill: #0F172A;
+            transition: fill 0.15s ease;
+        }
+        body[data-theme="dark"] .logo-path-dark {
+            fill: #FFFFFF !important;
+        }
+
+        .badge {
+            background-color: var(--burgundy);
+            color: #ffffff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 10px;
+            margin-left: auto;
+            display: inline-block;
+            line-height: 1;
+        }
+
+        .about-prominent-lead {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--burgundy);
+            line-height: 1.5;
+            margin: 0 0 0.6rem 0;
+        }
+
+        /* DARK MODE EXECUTIVE THEME OVERRIDES */
+        body[data-theme="dark"] {
+            --bg-body: #0D0F12;
+            --bg-sidebar: #14171C;
+            --bg-main: #0D0F12;
+            --bg-card: #14171C;
+            --bg-input: #14171C;
+            --border-subtle: #2A2E35;
+            --border-input: #2A2E35;
+            --burgundy: #EF4444;
+            --burgundy-hover: #B91C1C;
+            --burgundy-subtle: #2A1518;
+            --text-primary: #F5F5F5;
+            --text-secondary: #A7ABB3;
+            --text-muted: #6F747D;
+            --shadow-subtle: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-card: 0 1px 4px rgba(0,0,0,0.4);
+            background-color: #0D0F12;
+            color: #F5F5F5;
+        }
+
+        body[data-theme="dark"] .sidebar {
+            background-color: #14171C;
+            border-right-color: #2A2E35;
+        }
+
+        body[data-theme="dark"] .main-content {
+            background-color: #0D0F12;
+        }
+
+        body[data-theme="dark"] .nav-item {
+            color: #A7ABB3;
+        }
+        body[data-theme="dark"] .nav-item svg {
+            stroke: #A7ABB3;
+        }
+        body[data-theme="dark"] .nav-item:hover {
+            color: #F5F5F5;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        body[data-theme="dark"] .nav-item:hover svg {
+            stroke: #F5F5F5;
+        }
+
+        body[data-theme="dark"] .nav-item.active {
+            background-color: #2A1518;
+            color: #EF4444;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2), 0 0 0 1px rgba(239,68,68,0.2);
+        }
+        body[data-theme="dark"] .nav-item.active svg {
+            stroke: #EF4444;
+        }
+
+        body[data-theme="dark"] .brand-name {
+            color: #F5F5F5;
+        }
+
+        body[data-theme="dark"] .btn-primary {
+            background-color: #EF4444;
+            color: #ffffff;
+        }
+        body[data-theme="dark"] .btn-primary:hover {
+            background-color: #B91C1C;
+        }
+
+        body[data-theme="dark"] .btn-secondary {
+            background-color: #191D23;
+            color: #F5F5F5;
+            border-color: #2A2E35;
+        }
+        body[data-theme="dark"] .btn-secondary:hover {
+            background-color: #2A2E35;
+            border-color: #6F747D;
+        }
+
+        body[data-theme="dark"] .card-box {
+            background-color: #14171C;
+            border-color: #2A2E35;
+        }
+        body[data-theme="dark"] .card-box:hover {
+            background-color: #191D23;
+        }
+
+        body[data-theme="dark"] .action-bar {
+            background-color: #14171C;
+            border-color: #2A2E35;
+        }
+
+        body[data-theme="dark"] th {
+            background-color: #14171C;
+            color: #A7ABB3;
+            border-bottom-color: #2A2E35;
+        }
+        body[data-theme="dark"] td {
+            color: #F5F5F5;
+            border-bottom-color: #2A2E35;
+        }
+        body[data-theme="dark"] tr:hover td {
+            background-color: #191D23;
+        }
+
+        body[data-theme="dark"] .status-select {
+            background-color: #191D23;
+            border-color: #2A2E35;
+            color: #F5F5F5;
+        }
+
+        body[data-theme="dark"] .score-badge {
+            color: #EF4444;
+            background-color: #2A1518;
+        }
+
+        body[data-theme="dark"] .badge {
+            background-color: #EF4444;
+            color: #ffffff;
+        }
+
+        body[data-theme="dark"] .link-action {
+            color: #EF4444;
+        }
+
+        body[data-theme="dark"] .fstat {
+            background: #191D23;
+            border-color: #2A2E35;
+        }
+        body[data-theme="dark"] .fstat b {
+            color: #F5F5F5;
+        }
+        body[data-theme="dark"] .fstat span {
+            color: #A7ABB3;
+        }
+
+        body[data-theme="dark"] .cal-day {
+            background: #191D23;
+            border-color: #2A2E35;
+            color: #A7ABB3;
+        }
+        body[data-theme="dark"] .cal-day:hover {
+            background: #2A2E35;
+        }
+        body[data-theme="dark"] .cal-day.has {
+            background: #2A1518;
+            color: #EF4444;
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+        body[data-theme="dark"] .cal-day.today {
+            border: 2px solid #EF4444;
+        }
+        body[data-theme="dark"] .cal-day.today::after {
+            background: #EF4444;
+        }
+        body[data-theme="dark"] .cal-day.selected {
+            background: #EF4444 !important;
+            color: #ffffff !important;
+            border-color: #EF4444 !important;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+        }
+
+        body[data-theme="dark"] .filter-pill {
+            background: #2A1518;
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #EF4444;
+        }
+
+        body[data-theme="dark"] .tooltip-portal {
+            background-color: #191D23;
+            color: #F5F5F5;
+            border-color: #2A2E35;
+        }
+
+        body[data-theme="dark"] .about-section-text {
+            color: #A7ABB3 !important;
+        }
+
+        body[data-theme="dark"] .floating-ai-support {
+            background-color: #14171C;
+            border-color: #2A2E35;
+            color: #F5F5F5;
+        }
+        body[data-theme="dark"] .floating-ai-support:hover {
+            border-color: #EF4444;
+            color: #EF4444;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-layout">
+        
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div>
+                <!-- Brand Header (REMOVED BY TALVIOS) -->
+                <div class="brand-header">
+                    <svg class="brand-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path class="logo-path-dark" d="M15 15 H85 V30 H40 V85 H25 V30 H15 V15 Z" />
+                        <path d="M40 38 H75 V53 H55 V85 H40 V38 Z" fill="#9e1b2c" />
+                    </svg>
+                    <div class="brand-name">Job Pipeline</div>
+                </div>
+
+                <!-- Section 1: WORKSPACE -->
+                <div class="sidebar-section-title">WORKSPACE</div>
+                <div class="nav-group">
+                    <div class="nav-item active" id="tabNavJobs" onclick="switchTab('jobs')">
+                        <svg viewBox="0 0 24 24"><path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"></path><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path></svg>
+                        Jobs & Applications
+                    </div>
+                    <div class="nav-item" id="tabNavFailed" onclick="switchTab('failed')">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        History <span class="badge" id="failBadge" style="display:none">0</span>
+                    </div>
+                </div>
+
+                <!-- Section 2: OUTREACH -->
+                <div class="sidebar-section-title">OUTREACH</div>
+                <div class="nav-group">
+                    <div class="nav-item" id="tabNavCold" onclick="switchTab('cold')">
+                        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                        Cold Mail Outreach
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flexible Whitespace Spacer -->
+            <div class="sidebar-spacer"></div>
+
+            <!-- Bottom Navigation -->
+            <div class="nav-group">
+                <div class="nav-item" id="tabNavConfig" onclick="switchTab('config')">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    Configuration
+                </div>
+                <div class="nav-item" id="tabNavAbout" onclick="switchTab('about')">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+                    About Me
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="main-content">
+
+            <!-- TAB 1: JOBS & APPLICATIONS -->
+            <div id="viewJobs" class="tab-view active-view">
+                <div class="page-header">
+                    <h1 class="page-title">Jobs & Applications</h1>
+                    <p class="page-subtitle">Track job opportunities, monitor tailored AI resumes, and manage application pipelines.</p>
+                </div>
+
+                <div class="action-bar">
+                    <div class="action-bar-left">
+                        <button class="btn-primary" id="huntBtn" onclick="hunt()" style="display:inline-flex; align-items:center; gap:0.4rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>Find Jobs</button>
+                        <label style="font-size:0.84rem; color: var(--text-secondary); display:flex; align-items:center; gap:0.5rem; font-weight: 500;">
+                            Search Count:
+                            <input type="number" id="huntLimit" value="5" min="1" max="50" class="input-number-sm">
+                        </label>
+                        <span id="huntStatus" style="font-size:0.84rem; color: var(--burgundy); font-weight:600;"></span>
+                    </div>
+
+                    <div class="action-bar-right">
+                        <button class="btn-secondary" style="color:#ef4444; border-color:rgba(239,68,68,0.3); background-color:#fef2f2;" onclick="resetTodayJobs()">Reset Today's Jobs</button>
+                        <button class="btn-secondary" onclick="loadAll()">Refresh</button>
+                        <button class="btn-secondary" style="color:var(--burgundy); display:inline-flex; align-items:center; gap:0.35rem;" onclick="exportJobsCSV()">Export CSV <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></button>
+                    </div>
+                </div>
+
+                <div id="dateFilterPill" class="filter-pill" style="display:none;">
+                    Filtered by Date: <strong id="dateFilterValue"></strong>
+                    <span onclick="clearDateFilter()">✖ Clear Filter</span>
+                </div>
+
+                <div class="layout-grid">
+                    <div class="card-box" style="margin-bottom: 0;">
+                        <div class="card-header-title">
+                            <span>Tracked Applications & Tailored Resumes</span>
+                        </div>
+                        <div class="data-table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Company</th>
+                                        <th>Role Title</th>
+                                        <th>
+                                            Match Score 
+                                            <span class="info-btn" data-tooltip="AI compatibility rating (0% – 100%). HIGHER IS BETTER! (e.g. 95% = Exceptional Match, 80%+ = Strong Match). Calculated by comparing your Base Resume against job requirements.">i</span>
+                                        </th>
+                                        <th>Status</th>
+                                        <th>Resume</th>
+                                        <th>Link</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="jobsRows">
+                                    <tr><td colspan="7" style="color: var(--text-muted);">Loading jobs...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card-box" style="margin-bottom: 0;">
+                        <div class="funnel-grid" id="funnelStats"></div>
+                        <div class="cal-head">
+                            <button class="btn-secondary" style="padding:2px 8px; height:28px;" onclick="mv(-1)">‹</button>
+                            <span class="cal-title" id="calTitle">August 2026</span>
+                            <button class="btn-secondary" style="padding:2px 8px; height:28px;" onclick="mv(1)">›</button>
+                        </div>
+                        <div class="cal-grid" id="calGrid"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: HISTORY (UNIFIED LOG & STATUS FILTER) -->
+            <div id="viewFailed" class="tab-view">
+                <div class="page-header">
+                    <h1 class="page-title">Application & Pipeline History</h1>
+                    <p class="page-subtitle">Complete log of all fetched jobs, tracked application statuses, and failed dispatch items.</p>
+                </div>
+
+                <div class="card-box">
+                    <div class="card-header-title">
+                        <span>Pipeline Log</span>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <label style="font-size: 0.84rem; color: var(--text-secondary); font-weight: 500;">Filter Status:</label>
+                            <select id="historyStatusFilter" onchange="renderFailed()" class="status-select" style="padding: 0.4rem 0.8rem;">
+                                <option value="ALL">All Statuses</option>
+                                <option value="Ready to Apply">Ready to Apply</option>
+                                <option value="Applied">Applied</option>
+                                <option value="Interview">Interview</option>
+                                <option value="Offer">Offer</option>
+                                <option value="Rejected">Rejected</option>
+                                <option value="Failed">Failed</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="data-table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Company</th>
+                                    <th>Role Title</th>
+                                    <th>Match Score</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Resume</th>
+                                    <th>Link</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="failRows">
+                                <tr><td colspan="8" style="color: var(--text-muted);">Loading history...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: COLD MAIL OUTREACH -->
+            <div id="viewCold" class="tab-view">
+                <div class="page-header">
+                    <h1 class="page-title">Cold Mail Outreach</h1>
+                    <p class="page-subtitle">Manage recruiter contact lists and initialize AI personalized outreach campaigns.</p>
+                </div>
+
+                <div class="action-bar">
+                    <div class="action-bar-left">
+                        <div class="batch-limit-control" style="display:flex; align-items:center; gap:0.5rem;">
+                            <span style="font-size:0.84rem; color:var(--text-secondary); font-weight:500;">Max Emails:</span>
+                            <input type="number" id="cfgBatchLimit" class="input-number-sm" value="10" min="1" max="1000">
+                        </div>
+                        <button class="btn-primary" onclick="triggerOutreachBatch()">Initialize ▶</button>
+                    </div>
+
+                    <div class="action-bar-right">
+                        <button class="btn-secondary" onclick="importDrivePrompt()">⇪ Import files from Drive/HR_list</button>
+                        <button class="btn-secondary" onclick="importSheetPrompt()">Import Google Sheet Link</button>
+                    </div>
+                </div>
+
+                <div class="card-box">
+                    <div class="card-header-title">
+                        <span>HR & Recruiter Contact List</span>
+                    </div>
+                    <div class="data-table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Company</th>
+                                    <th>Status</th>
+                                    <th>Date Sent</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hrRows">
+                                <tr><td colspan="5" style="color: var(--text-muted);">Loading contacts...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: CONFIGURATION -->
+            <div id="viewConfig" class="tab-view">
+                <div class="page-header">
+                    <h1 class="page-title">Configuration</h1>
+                    <p class="page-subtitle">Manage pipeline keys, job targets, sender details, and n8n webhook settings.</p>
+                </div>
+
+                <div class="card-box">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">
+                                Groq API Key
+                                <span class="info-btn" data-tooltip="Required. Free API key from console.groq.com. Powers high-speed Llama 3.3 70B email copy generation.">i</span>
+                            </label>
+                            <div style="position: relative; display: flex; align-items: center;">
+                                <input type="password" id="cfgGroqKey" class="form-input" style="padding-right: 40px;" placeholder="gsk_••••••••••••••••">
+                                <button type="button" onclick="togglePasswordVisibility('cfgGroqKey', this)" style="position: absolute; right: 10px; background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                OpenRouter API Key (Optional Fallback)
+                                <span class="info-btn" data-tooltip="Optional. Provides automatic LLM fallback from openrouter.ai if Groq hits rate limits.">i</span>
+                            </label>
+                            <div style="position: relative; display: flex; align-items: center;">
+                                <input type="password" id="cfgOpenRouterKey" class="form-input" style="padding-right: 40px;" placeholder="sk-or-v1-•••••••••••••••• (Optional)">
+                                <button type="button" onclick="togglePasswordVisibility('cfgOpenRouterKey', this)" style="position: absolute; right: 10px; background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                Google Sheets ID or Full URL
+                                <span class="info-btn" data-tooltip="Required. Paste your Google Spreadsheet URL or Sheet ID containing your prospect list. Ensure sharing is set to 'Anyone with link can view'.">i</span>
+                            </label>
+                            <div style="position: relative; display: flex; align-items: center;">
+                                <input type="password" id="cfgSheetsId" class="form-input" style="padding-right: 40px;" placeholder="https://docs.google.com/spreadsheets/d/...">
+                                <button type="button" onclick="togglePasswordVisibility('cfgSheetsId', this)" style="position: absolute; right: 10px; background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                Google Drive Base Resume File ID (Optional)
+                                <span class="info-btn" data-tooltip="Optional. Upload your Base Resume PDF to Google Drive -> Copy File ID (e.g. 1A2B3C4D...) -> paste here.">i</span>
+                            </label>
+                            <div style="position: relative; display: flex; align-items: center;">
+                                <input type="password" id="cfgResumeFileId" class="form-input" style="padding-right: 40px;" placeholder="e.g. 1A2B3C4D5E6F7G8H9I0J (Optional)">
+                                <button type="button" onclick="togglePasswordVisibility('cfgResumeFileId', this)" style="position: absolute; right: 10px; background: none; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                Target Job Titles / Keywords (Optional)
+                                <span class="info-btn" data-tooltip="Optional. Enter comma-separated job titles to hunt for (e.g. Data Analyst, Software Engineer, Product Manager).">i</span>
+                            </label>
+                            <input type="text" id="cfgSearchTerms" class="form-input" placeholder="e.g. Data Analyst, Software Engineer (Optional)">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                Target Locations (Comma-Separated, Optional)
+                                <span class="info-btn" data-tooltip="Optional. Enter target regions separated by commas (e.g. Remote, United States, India).">i</span>
+                            </label>
+                            <input type="text" id="cfgLocation" class="form-input" placeholder="e.g. Remote, United States (Optional)">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                Sender Name
+                                <span class="info-btn" data-tooltip="Required. Your full name as it will appear in the email signature and greeting (e.g. Alex Mercer).">i</span>
+                            </label>
+                            <input type="text" id="cfgSenderName" class="form-input" placeholder="e.g. Alex Mercer">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                Sender Title / Role (Optional)
+                                <span class="info-btn" data-tooltip="Optional. Your designation or role (e.g. Founder, Lead Engineer, or Specialist). Leave blank if reaching out as an individual or job seeker.">i</span>
+                            </label>
+                            <input type="text" id="cfgSenderTitle" class="form-input" placeholder="e.g. Founder / Specialist (Optional)">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                Company / Brand Name (Optional)
+                                <span class="info-btn" data-tooltip="Optional. Your agency, business, or startup name. Leave blank if reaching out as an individual or job seeker.">i</span>
+                            </label>
+                            <input type="text" id="cfgSenderCompany" class="form-input" placeholder="e.g. GrowthScale Agency (Optional)">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                Sender Email Address
+                                <span class="info-btn" data-tooltip="Required. Your sender email address used to dispatch emails via Gmail.">i</span>
+                            </label>
+                            <input type="email" id="cfgSenderEmail" class="form-input" placeholder="alex@growthscale.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                Website / Portfolio / LinkedIn URL (Optional)
+                                <span class="info-btn" data-tooltip="Optional. Paste your personal portfolio, agency website, or LinkedIn profile URL. Added to your email signature.">i</span>
+                            </label>
+                            <input type="text" id="cfgSenderWebsite" class="form-input" placeholder="https://growthscale.com or LinkedIn link (Optional)">
+                        </div>
+
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label class="form-label">
+                                n8n Webhook Base URL
+                                <span class="info-btn" data-tooltip="Default: http://localhost:5678/webhook. Update if running n8n Cloud or running n8n on a custom port/server.">i</span>
+                            </label>
+                            <input type="text" id="cfgN8nWebhook" class="form-input" placeholder="http://localhost:5678/webhook">
+                        </div>
+
+                        <div class="form-group" style="grid-column: span 2; margin-top: 0.5rem;">
+                            <div class="toggle-group">
+                                <label class="switch">
+                                    <input type="checkbox" id="cfgAttachResume">
+                                    <span class="slider"></span>
+                                </label>
+                                <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">
+                                    <strong>Attach Resume / PDF</strong> (Enable for HR Recruitment, Disable for B2B Client Sales)
+                                    <span class="info-btn" data-tooltip="Toggle ON to attach your resume PDF when reaching out to HR/Recruiters. Toggle OFF for B2B Sales & Freelance prospecting.">i</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="grid-column: span 2; margin-top: 0.5rem;">
+                            <div class="toggle-group">
+                                <label class="switch">
+                                    <input type="checkbox" id="cfgDarkMode" onchange="toggleDarkMode(this.checked)">
+                                    <span class="slider"></span>
+                                </label>
+                                <span style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">
+                                    <strong>Dark Mode Theme</strong> (Switch between Executive Light and Executive Dark Theme)
+                                    <span class="info-btn" data-tooltip="Toggle ON to enable dark theme mode (#0D0F12 / #14171C / #EF4444 accent). State is saved across sessions.">i</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem;">
+                        <button class="btn-primary" onclick="saveConfiguration()">Save Configuration & Sync Pipeline</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: ABOUT ME (EDITORIAL PERSONAL STORY PAGE — TARGETED REFINEMENT) -->
+            <div id="viewAbout" class="tab-view">
+                <div class="page-header" style="margin-bottom: 2rem;">
+                    <h1 class="page-title" style="font-size: 1.8rem; color: var(--burgundy);">About Me</h1>
+                    <p class="page-subtitle" style="font-size: 0.92rem;">The person behind Job Pipeline.</p>
+                </div>
+
+                <div class="about-me-container">
+                    <!-- Natural Introduction (No redundant uppercase red label) -->
+                    <p class="about-section-text" style="font-size: 1.05rem; font-weight: 500; line-height: 1.7; margin-bottom: 1.8rem;">
+                        I'm Swagat, a data analyst and builder who enjoys turning messy, repetitive processes into systems that are easier to understand and use.
+                    </p>
+
+                    <!-- Section: BACKGROUND -->
+                    <div class="about-editorial-heading" style="margin-top: 0;">BACKGROUND</div>
+                    <p class="about-section-text">
+                        I started my career working in the insurance domain, where I worked with Guidewire PolicyCenter and became increasingly interested in the data and process side of the work. Over time, my focus expanded toward data analysis, visualization, automation, and building practical tools that solve real problems.
+                    </p>
+                    <p class="about-section-text">
+                        I work with SQL, Python, Power BI, Excel, and automation tools, but I'm more interested in how they come together to solve a problem than in the tools themselves.
+                    </p>
+
+                    <!-- Section: WHY I BUILT JOBHUNT (Visual Focal Point) -->
+                    <div class="about-editorial-heading">WHY I BUILT JOBHUNT</div>
+                    <p class="about-prominent-lead">
+                        Job searching is a process made up of many repetitive tasks.
+                    </p>
+                    <p class="about-section-text">
+                        finding relevant roles, understanding job requirements, tailoring a resume, applying, reaching out to recruiters, and keeping track of everything.
+                    </p>
+                    <p class="about-section-text">
+                        I built JobHunt to bring those pieces into one system and automate as much of the repetitive work as possible.
+                    </p>
+                    <p class="about-section-text">
+                        It started as a personal solution to a problem I was dealing with myself. Building it also gave me a way to combine my experience in data, automation, and software development into something I could actually use.
+                    </p>
+
+                    <!-- Understated Text Sequence Workflow -->
+                    <div class="workflow-text-sequence">
+                        Find &nbsp;&nbsp;→&nbsp;&nbsp; Tailor &nbsp;&nbsp;→&nbsp;&nbsp; Apply &nbsp;&nbsp;→&nbsp;&nbsp; Outreach &nbsp;&nbsp;→&nbsp;&nbsp; Track
+                    </div>
+
+                    <!-- Section: HOW I BUILD -->
+                    <div class="about-editorial-heading">HOW I BUILD</div>
+                    <p class="about-section-text">
+                        I prefer simple systems over complicated ones.
+                    </p>
+                    <p class="about-section-text">
+                        When a process feels unnecessarily difficult, I usually start by breaking it down, understanding where the friction comes from, and then finding a way to make the process clearer and more repeatable.
+                    </p>
+                    <p class="about-section-text">
+                        That approach is reflected in the way I build JobHunt and the other projects I work on.
+                    </p>
+
+                    <!-- Section: CURRENTLY -->
+                    <div class="about-editorial-heading">CURRENTLY</div>
+                    <p class="about-section-text">
+                        I'm continuing to improve JobHunt while exploring new ways to use data, automation, and AI to build practical products.
+                    </p>
+                    <p class="about-section-text">
+                        For me, the goal isn't to add technology for the sake of it. It's to build something that genuinely makes a complicated task easier.
+                    </p>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Floating AI Support Control in Bottom Right -->
+    <a href="{SUPPORT_LINK}" target="_blank" class="floating-ai-support">
+        <svg style="width:15px; height:15px; stroke:currentColor; stroke-width:2; fill:none;" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        AI Support
+    </a>
+
+    <!-- Global Floating Tooltip Element Portal -->
+    <div id="tooltipPortal" class="tooltip-portal"></div>
+
+    <div id="toast" class="toast">Notification</div>
+
+    <script>
+        const STATUSES = ['Ready to Apply','Applied','Interview','Offer','Rejected','No Response'];
+        const HR_STATUSES = ['Pending','Sent','Failed','Replied'];
+        let JOBS = [], FAILED = [], HR_ROWS = [], calY, calM, dayFilter = null;
+        const today = new Date();
+        calY = today.getFullYear(); calM = today.getMonth();
+
+        function esc(s){ return String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+        /* SMART FLOATING TOOLTIP ENGINE */
+        function initTooltips() {
+            const portal = document.getElementById('tooltipPortal');
+            document.addEventListener('mouseover', (e) => {
+                const btn = e.target.closest('.info-btn');
+                if (btn) {
+                    const text = btn.getAttribute('data-tooltip');
+                    if (text) {
+                        portal.textContent = text;
+                        portal.style.display = 'block';
+                        const rect = btn.getBoundingClientRect();
+                        const portalWidth = 260;
+                        let left = rect.left + (rect.width / 2) - (portalWidth / 2);
+                        
+                        if (left < 12) left = 12;
+                        if (left + portalWidth > window.innerWidth - 12) left = window.innerWidth - portalWidth - 12;
+
+                        portal.style.left = left + 'px';
+                        let top = rect.top - portal.offsetHeight - 8;
+                        
+                        if (rect.top < portal.offsetHeight + 16) {
+                            top = rect.bottom + 8;
+                        }
+                        portal.style.top = top + 'px';
+                    }
+                }
+            });
+
+            document.addEventListener('mouseout', (e) => {
+                const btn = e.target.closest('.info-btn');
+                if (btn) {
+                    portal.style.display = 'none';
+                }
+            });
+        }
+
+        const SVG_LIGHTNING = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>`;
+        const SVG_DOWNLOAD = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>`;
+        const SVG_EXTERNAL = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:3px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`;
+        const SVG_TRASH = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
+        const SVG_RETRY = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>`;
+        const SVG_EYE_DEF = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+        const SVG_EYE_OFF_DEF = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+
+        function togglePasswordVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.innerHTML = SVG_EYE_OFF_DEF;
+            } else {
+                input.type = 'password';
+                btn.innerHTML = SVG_EYE_DEF;
+            }
+        }
+
+        async function loadConfig() {
+            try {
+                const res = await fetch('/api/config');
+                const cfg = await res.json();
+                document.getElementById('cfgGroqKey').value = cfg.groq_api_key || '';
+                document.getElementById('cfgOpenRouterKey').value = cfg.openrouter_api_key || '';
+                document.getElementById('cfgSheetsId').value = cfg.sheets_id || '';
+                document.getElementById('cfgResumeFileId').value = cfg.resume_file_id || '';
+                document.getElementById('cfgSearchTerms').value = cfg.search_terms || '';
+                document.getElementById('cfgLocation').value = cfg.location || '';
+                document.getElementById('cfgSenderName').value = cfg.sender_name || '';
+                document.getElementById('cfgSenderTitle').value = cfg.sender_title || '';
+                document.getElementById('cfgSenderCompany').value = cfg.sender_company || '';
+                document.getElementById('cfgSenderEmail').value = cfg.sender_email || '';
+                document.getElementById('cfgSenderWebsite').value = cfg.sender_website || '';
+                document.getElementById('cfgN8nWebhook').value = cfg.n8n_webhook_base || 'http://localhost:5678/webhook';
+                document.getElementById('cfgAttachResume').checked = cfg.attach_resume || false;
+                initDarkMode();
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        async function saveConfiguration() {
+            const payload = {
+                groq_api_key: document.getElementById('cfgGroqKey').value.trim(),
+                openrouter_api_key: document.getElementById('cfgOpenRouterKey').value.trim(),
+                sheets_id: document.getElementById('cfgSheetsId').value.trim(),
+                resume_file_id: document.getElementById('cfgResumeFileId').value.trim(),
+                search_terms: document.getElementById('cfgSearchTerms').value.trim(),
+                location: document.getElementById('cfgLocation').value.trim(),
+                sender_name: document.getElementById('cfgSenderName').value.trim(),
+                sender_title: document.getElementById('cfgSenderTitle').value.trim(),
+                sender_company: document.getElementById('cfgSenderCompany').value.trim(),
+                sender_email: document.getElementById('cfgSenderEmail').value.trim(),
+                sender_website: document.getElementById('cfgSenderWebsite').value.trim(),
+                n8n_webhook_base: document.getElementById('cfgN8nWebhook').value.trim(),
+                attach_resume: document.getElementById('cfgAttachResume').checked
+            };
+
+            try {
+                const res = await fetch('/api/config/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                showToast(data.message || 'Configuration saved & synced!');
+            } catch(e) {
+                showToast('Failed to save configuration');
+            }
+        }
+
+        async function loadAll() {
+            try {
+                const [rj, rf] = await Promise.all([fetch('/api/jobs'), fetch('/api/failed')]);
+                JOBS = (await rj.json()).jobs || [];
+                FAILED = (await rf.json()).failed || [];
+                renderJobs(); renderFailed(); renderFunnel(); renderCalendar();
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        function getTodayISO() {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function getVisibleJobs() {
+            const todayStr = getTodayISO();
+            if (dayFilter) {
+                return JOBS.filter(j => {
+                    const d = normalizeDate(j['Date Applied'] || j['Date Fetched']);
+                    return d === dayFilter || (!d && (j['Status'] || '').trim() === 'Ready to Apply' && dayFilter === todayStr);
+                });
+            }
+            return JOBS.filter(j => {
+                const df = normalizeDate(j['Date Fetched']);
+                const da = normalizeDate(j['Date Applied']);
+                const status = (j['Status'] || '').trim();
+                if ((df && df === todayStr) || (da && da === todayStr)) return true;
+                if (!df && !da && status === 'Ready to Apply') return true;
+                return false;
+            });
+        }
+
+        function renderJobs() {
+            const tbody = document.getElementById('jobsRows');
+            const pill = document.getElementById('dateFilterPill');
+            const rows = getVisibleJobs();
+
+            if (dayFilter) {
+                pill.style.display = 'inline-flex';
+                document.getElementById('dateFilterValue').textContent = dayFilter;
+            } else {
+                pill.style.display = 'none';
+            }
+            if (!rows.length) {
+                tbody.innerHTML = `<tr><td colspan="7" style="color: var(--text-muted); text-align: center; padding: 2rem;">${dayFilter ? 'No jobs found for date ' + esc(dayFilter) : 'No jobs fetched today'}</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = rows.slice().reverse().map(j => `
+                <tr>
+                    <td><strong>${esc(j['Company Name'])}</strong></td>
+                    <td>${esc(j['Role Title'])}</td>
+                    <td><span class="score-badge">${esc(j['Match Score'] ?? '85%')}</span></td>
+                    <td>
+                        <select class="status-select" onchange="setStatus(${j.row_number}, this.value)">
+                            ${STATUSES.map(s => `<option ${s === (j['Status'] || 'Ready to Apply') ? 'selected' : ''}>${s}</option>`).join('')}
+                        </select>
+                    </td>
+                    <td>${j.resume_file ? `<a href="/resume/${j.resume_file}" class="link-action" style="font-weight:600; display:inline-flex; align-items:center;">${SVG_DOWNLOAD}Download PDF</a>` : `<button class="btn-primary" style="padding:0.25rem 0.6rem; height:28px; font-size:0.78rem; display:inline-flex; align-items:center;" onclick="generateResumeForJob(${j.row_number}, this)">${SVG_LIGHTNING}Generate Resume</button>`}</td>
+                    <td>${j['Job URL'] ? `<a href="${esc(j['Job URL'])}" target="_blank" class="link-action" style="display:inline-flex; align-items:center;">Open ${SVG_EXTERNAL}</a>` : '<span style="color:var(--text-muted);">—</span>'}</td>
+                    <td><button class="btn-delete" onclick="delRow(${j.row_number})" title="Delete row" style="display:inline-flex; align-items:center; justify-content:center;">${SVG_TRASH}</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function clearDateFilter() {
+            dayFilter = null;
+            renderJobs();
+            renderFunnel();
+            renderCalendar();
+        }
+
+        function selectCalendarDate(iso) {
+            dayFilter = iso;
+            renderJobs();
+            renderFunnel();
+            renderCalendar();
+        }
+
+        function renderFailed() {
+            const tb = document.getElementById('failRows');
+            const badge = document.getElementById('failBadge');
+            const filterVal = (document.getElementById('historyStatusFilter')?.value || 'ALL').toUpperCase();
+
+            if (badge) {
+                badge.style.display = FAILED.length ? '' : 'none';
+                badge.textContent = FAILED.length;
+            }
+
+            if (!tb) return;
+
+            let combined = [];
+
+            JOBS.forEach(j => {
+                combined.push({
+                    type: 'tracked',
+                    company: j['Company Name'] || 'Unknown',
+                    role: j['Role Title'] || 'Unknown',
+                    matchScore: j['Match Score'] ?? '85%',
+                    status: j['Status'] || 'Ready to Apply',
+                    date: j['Date Applied'] || j['Date Fetched'] || '—',
+                    resume_file: j.resume_file,
+                    job_url: j['Job URL'],
+                    row_number: j.row_number,
+                    raw: j
+                });
+            });
+
+            FAILED.forEach((f, idx) => {
+                combined.push({
+                    type: 'failed',
+                    company: f['Company Name'] || 'Unknown',
+                    role: f['Role Title'] || 'Unknown',
+                    matchScore: f['match_score'] ?? '—',
+                    status: 'Failed',
+                    date: (f.dispatched_at || '').replace('T', ' ').slice(0, 16),
+                    resume_file: null,
+                    job_url: f['Job URL'],
+                    failIndex: idx,
+                    raw: f
+                });
+            });
+
+            if (filterVal !== 'ALL') {
+                combined = combined.filter(item => item.status.toUpperCase() === filterVal);
+            }
+
+            if (!combined.length) {
+                tb.innerHTML = `<tr><td colspan="8" style="color: var(--text-muted); text-align: center; padding: 2rem;">No items found matching status filter "${esc(filterVal)}".</td></tr>`;
+                return;
+            }
+
+            tb.innerHTML = combined.slice().reverse().map(item => {
+                if (item.type === 'failed') {
+                    return `
+                        <tr>
+                            <td><strong>${esc(item.company)}</strong></td>
+                            <td>${esc(item.role)}</td>
+                            <td><span class="score-badge" style="opacity:0.6;">${esc(item.matchScore)}</span></td>
+                            <td><span style="background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); padding:2px 8px; border-radius:4px; font-size:0.8rem; font-weight:600;">Failed</span></td>
+                            <td style="color: var(--text-muted);">${esc(item.date)}</td>
+                            <td><span style="color:var(--text-muted);">—</span></td>
+                            <td>${item.job_url ? `<a href="${esc(item.job_url)}" target="_blank" class="link-action" style="display:inline-flex; align-items:center;">Open ${SVG_EXTERNAL}</a>` : '<span style="color:var(--text-muted);">—</span>'}</td>
+                            <td><button class="btn-primary" style="padding:0.25rem 0.6rem; height:28px; font-size:0.78rem; display:inline-flex; align-items:center;" onclick="retryFailed(${item.failIndex}, this)">${SVG_RETRY}Retry</button></td>
+                        </tr>
+                    `;
+                } else {
+                    return `
+                        <tr>
+                            <td><strong>${esc(item.company)}</strong></td>
+                            <td>${esc(item.role)}</td>
+                            <td><span class="score-badge">${esc(item.matchScore)}</span></td>
+                            <td>
+                                <select class="status-select" onchange="setStatus(${item.row_number}, this.value)">
+                                    ${STATUSES.map(s => `<option ${s === item.status ? 'selected' : ''}>${s}</option>`).join('')}
+                                </select>
+                            </td>
+                            <td style="color: var(--text-muted);">${esc(item.date)}</td>
+                            <td>${item.resume_file ? `<a href="/resume/${item.resume_file}" class="link-action" style="font-weight:600; display:inline-flex; align-items:center;">${SVG_DOWNLOAD}Download PDF</a>` : `<button class="btn-primary" style="padding:0.25rem 0.6rem; height:28px; font-size:0.78rem; display:inline-flex; align-items:center;" onclick="generateResumeForJob(${item.row_number}, this)">${SVG_LIGHTNING}Generate Resume</button>`}</td>
+                            <td>${item.job_url ? `<a href="${esc(item.job_url)}" target="_blank" class="link-action" style="display:inline-flex; align-items:center;">Open ${SVG_EXTERNAL}</a>` : '<span style="color:var(--text-muted);">—</span>'}</td>
+                            <td><button class="btn-delete" onclick="delRow(${item.row_number})" title="Delete row" style="display:inline-flex; align-items:center; justify-content:center;">${SVG_TRASH}</button></td>
+                        </tr>
+                    `;
+                }
+            }).join('');
+        }
+
+        async function generateResumeForJob(rowNum, btn) {
+            const job = JOBS.find(j => j.row_number === rowNum);
+            if (!job) return;
+            btn.disabled = true;
+            btn.innerHTML = `Generating...`;
+            showToast(`Generating tailored AI resume for ${job['Role Title'] || 'Job'}...`);
+            try {
+                const res = await fetch('/api/generate-resume', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(job)
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast('Tailored AI resume generated successfully!');
+                    setTimeout(loadAll, 1000);
+                } else {
+                    btn.disabled = false;
+                    btn.innerHTML = `${SVG_LIGHTNING}Generate Resume`;
+                    showToast('Resume error: ' + (data.error || 'Failed'));
+                }
+            } catch(e) {
+                btn.disabled = false;
+                btn.innerHTML = `${SVG_LIGHTNING}Generate Resume`;
+                showToast('Network error generating resume');
+            }
+        }
+
+        async function resetTodayJobs() {
+            if (!confirm("Are you sure you want to reset today's fetched jobs?\\n\\nThis will remove unapplied jobs from the Google Sheet and clear local cache.")) return;
+            showToast("Resetting today's fetched jobs...");
+            try {
+                const res = await fetch('/api/reset-fetched', { method: 'POST' });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast(`Successfully reset ${data.deleted_count} fetched jobs.`);
+                } else {
+                    showToast(`Reset failed: ${data.error || 'Unknown error'}`);
+                }
+            } catch(e) {
+                showToast("Failed to communicate with backend");
+            }
+            loadAll();
+        }
+
+        async function retryFailed(i, btn) {
+            btn.disabled = true; btn.textContent = '…';
+            await fetch('/api/retry', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(FAILED[i])
+            });
+            btn.textContent = 'Queued';
+            setTimeout(loadAll, 10000);
+        }
+
+        async function setStatus(row, status) {
+            const target = JOBS.find(j => j.row_number === row);
+            if (target) {
+                target['Status'] = status;
+                if (status === 'Applied' && !target['Date Applied']) {
+                    target['Date Applied'] = getTodayISO();
+                }
+            }
+            renderJobs(); renderFailed(); renderFunnel();
+            try {
+                await fetch('/api/status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ row_number: row, status })
+                });
+            } catch(e) {}
+        }
+
+        async function hunt() {
+            const btn = document.getElementById('huntBtn');
+            const status = document.getElementById('huntStatus');
+            const limitVal = parseInt(document.getElementById('huntLimit').value) || 20;
+            const initialCount = JOBS.length;
+
+            btn.disabled = true;
+            status.textContent = `Searching for ${limitVal} jobs posted in last 48 hrs...`;
+
+            let fetchFinished = false;
+            fetch('/api/hunt', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ limit: limitVal })
+            }).then(() => { fetchFinished = true; }).catch(() => { fetchFinished = true; });
+
+            let attempts = 0;
+            const maxAttempts = 24;
+            const pollInterval = setInterval(async () => {
+                attempts++;
+                status.textContent = `Scraping & retrieving jobs... (${Math.round(attempts * 2.5)}s)`;
+                await loadAll();
+                if (JOBS.length > initialCount || (fetchFinished && attempts >= 4) || attempts >= maxAttempts) {
+                    clearInterval(pollInterval);
+                    btn.disabled = false;
+                    status.textContent = JOBS.length > initialCount ? `Found new jobs!` : `Search completed.`;
+                    setTimeout(() => { status.textContent = ''; }, 4000);
+                }
+            }, 2500);
+        }
+
+        async function delRow(row) {
+            if (!confirm('Delete this application from tracker?')) return;
+            await fetch('/api/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ row_number: row })
+            });
+            loadAll();
+        }
+
+        function exportJobsCSV() {
+            if (!JOBS.length) return showToast('No jobs to export');
+            let csv = 'Company,Role Title,Match Score,Status,Job URL,Date Applied\\n';
+            JOBS.forEach(j => {
+                csv += `"${j['Company Name'] || ''}","${j['Role Title'] || ''}","${j['Match Score'] || ''}","${j['Status'] || ''}","${j['Job URL'] || ''}","${j['Date Applied'] || ''}"\\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Tracked_Applications_${new Date().toISOString().slice(0,10)}.csv`;
+            a.click();
+        }
+
+        function renderFunnel() {
+            const visible = getVisibleJobs();
+            const c = s => visible.filter(j => (j['Status'] || '') === s).length;
+            const el = document.getElementById('funnelStats');
+            if (!el) return;
+            el.innerHTML = [
+                ['Ready', c('Ready to Apply')], ['Applied', c('Applied')],
+                ['Interview', c('Interview')], ['Offer', c('Offer')], ['Rejected', c('Rejected')]
+            ].map(([l, n]) => `<div class="fstat"><b>${n}</b><span>${l}</span></div>`).join('');
+        }
+
+        function normalizeDate(d) {
+            if (!d) return null;
+            d = String(d).trim();
+            let m = d.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+            if (m) return `${m[1]}-${String(m[2]).padStart(2,'0')}-${String(m[3]).padStart(2,'0')}`;
+            return d;
+        }
+
+        function mv(dir) {
+            calM += dir;
+            if (calM < 0) { calM = 11; calY--; }
+            if (calM > 11) { calM = 0; calY++; }
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const counts = {};
+            JOBS.forEach(j => {
+                const d = normalizeDate(j['Date Applied'] || j['Date Fetched']);
+                if (d) counts[d] = (counts[d] || 0) + 1;
+            });
+            const todayStr = getTodayISO();
+            const first = new Date(calY, calM, 1), start = first.getDay();
+            const days = new Date(calY, calM + 1, 0).getDate();
+            document.getElementById('calTitle').textContent = first.toLocaleString('en', { month: 'long', year: 'numeric' });
+            let html = ['S','M','T','W','T','F','S'].map(d => `<div class="cal-dow">${d}</div>`).join('');
+            for (let i = 0; i < start; i++) html += '<div class="cal-day blank"></div>';
+            for (let d = 1; d <= days; d++) {
+                const iso = `${calY}-${String(calM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                const c = counts[iso] || 0;
+                const isToday = iso === todayStr;
+                const isSelected = dayFilter && iso === dayFilter;
+                html += `<div class="cal-day ${c ? 'has' : ''} ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}" onclick="selectCalendarDate('${iso}')">
+                           <div>${d}</div>${c ? `<div class="n">${c}</div>` : ''}</div>`;
+            }
+            document.getElementById('calGrid').innerHTML = html;
+        }
+
+        async function loadAudience() {
+            try {
+                const res = await fetch('/api/hr/stats');
+                const data = await res.json();
+                const tbody = document.getElementById('hrRows');
+                const rows = data.rows || [];
+
+                if (rows.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="color: var(--text-muted);">No contacts loaded. Paste Google Sheet URL in Configuration or click Import Sheet / Import Drive.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = rows.slice().reverse().slice(0, 200).map(r => `
+                    <tr>
+                        <td><strong>${esc(r.Name)}</strong></td>
+                        <td>${esc(r.Email)}</td>
+                        <td>${esc(r.Company)}</td>
+                        <td>
+                            <select class="status-select" onchange="setHRStatus('${esc(r.Email)}', this.value)">
+                                ${HR_STATUSES.map(s => `<option ${s.toLowerCase() === (r.Status || 'Pending').toLowerCase() ? 'selected' : ''}>${s}</option>`).join('')}
+                            </select>
+                        </td>
+                        <td>${esc(r['Date Sent'] || '-')}</td>
+                    </tr>
+                `).join('');
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        async function setHRStatus(email, status) {
+            showToast(`Status updated to ${status}`);
+        }
+
+        async function triggerOutreachBatch() {
+            const limitInput = document.getElementById('cfgBatchLimit');
+            const limitVal = parseInt(limitInput.value) || 10;
+
+            if (!confirm(`Initialize cold outreach batch for up to ${limitVal} contacts?`)) return;
+            showToast(`Initializing outreach batch (${limitVal} contacts)...`);
+
+            try {
+                const res = await fetch('/api/hr/send-batch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ limit: limitVal })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast(`Outreach batch for ${limitVal} contacts initialized!`);
+                    setTimeout(loadAudience, 3000);
+                } else {
+                    showToast('Failed: ' + data.error);
+                }
+            } catch(e) {
+                showToast('Execution error');
+            }
+        }
+
+        async function importDrivePrompt() {
+            showToast('Importing all files from Drive/HR_list...');
+            try {
+                const res = await fetch('/api/hr/import-drive', { method: 'POST' });
+                const data = await res.json();
+                if (data.files !== undefined) {
+                    showToast(`Processed ${data.files} file(s) from Drive/HR_list!`);
+                    loadAudience();
+                } else {
+                    showToast('Drive import error: ' + (data.error || 'Failed'));
+                }
+            } catch(e) {
+                showToast('Drive import request failed');
+            }
+        }
+
+        async function importSheetPrompt() {
+            const url = prompt('Enter Google Sheet URL or ID:');
+            if (!url) return;
+            document.getElementById('cfgSheetsId').value = url;
+            showToast('Importing sheet...');
+            try {
+                const res = await fetch('/api/hr/import-sheet', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast('Sheet imported successfully!');
+                    saveConfiguration();
+                    loadAudience();
+                } else {
+                    showToast('Import error: ' + (data.error || 'Check sheet permissions'));
+                }
+            } catch(e) {
+                showToast('Import request failed');
+            }
+        }
+
+        function switchTab(tab) {
+            const tabs = ['jobs', 'failed', 'cold', 'config', 'about'];
+            tabs.forEach(t => {
+                const nav = document.getElementById('tabNav' + t.charAt(0).toUpperCase() + t.slice(1));
+                const view = document.getElementById('view' + t.charAt(0).toUpperCase() + t.slice(1));
+                if (nav) nav.classList.remove('active');
+                if (view) view.classList.remove('active-view');
+            });
+
+            const activeNav = document.getElementById('tabNav' + tab.charAt(0).toUpperCase() + tab.slice(1));
+            const activeView = document.getElementById('view' + tab.charAt(0).toUpperCase() + tab.slice(1));
+            if (activeNav) activeNav.classList.add('active');
+            if (activeView) activeView.classList.add('active-view');
+
+            if (tab === 'jobs') { renderJobs(); renderFunnel(); renderCalendar(); }
+            else if (tab === 'failed') { renderFailed(); }
+            else if (tab === 'cold') { if (!HR_ROWS || !HR_ROWS.length) loadAudience(); }
+            else if (tab === 'config') { loadConfig(); }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3500);
+        }
+
+        function toggleDarkMode(isDark) {
+            if (isDark) {
+                document.body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('job_pipeline_theme', 'dark');
+            } else {
+                document.body.removeAttribute('data-theme');
+                localStorage.setItem('job_pipeline_theme', 'light');
+            }
+        }
+
+        function initDarkMode() {
+            const savedTheme = localStorage.getItem('job_pipeline_theme');
+            const isDark = savedTheme === 'dark';
+            if (isDark) {
+                document.body.setAttribute('data-theme', 'dark');
+            }
+            const darkInput = document.getElementById('cfgDarkMode');
+            if (darkInput) darkInput.checked = isDark;
+        }
+
+        initDarkMode();
+        initTooltips();
+        loadConfig();
+        loadAll();
+        loadAudience();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resume Generator — by Talvios</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root[data-theme="light"] {
+    --bg-body: #f8fafc;
+    --card-bg: #ffffff;
+    --card-border: #e2e8f0;
+    --input-bg: #ffffff;
+    --input-border: #cbd5e1;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --burgundy: #D92338;
+    --burgundy-hover: #b91c1c;
+    --burgundy-light: #fef2f2;
+    --burgundy-border: #fca5a5;
+    --header-bg: rgba(255, 255, 255, 0.95);
+    --table-header: #f8fafc;
+    --divider-color: #e2e8f0;
+  }
+
+  :root[data-theme="dark"] {
+    --bg-body: #0D0F12;
+    --card-bg: #14171C;
+    --card-border: #2A2E35;
+    --input-bg: #191D23;
+    --input-border: #334155;
+    --text-primary: #F5F5F5;
+    --text-secondary: #A7ABB3;
+    --text-muted: #64748B;
+    --burgundy: #D92338;
+    --burgundy-hover: #ef4444;
+    --burgundy-light: #2A1518;
+    --burgundy-border: rgba(217, 35, 56, 0.4);
+    --header-bg: rgba(13, 15, 18, 0.95);
+    --table-header: #191D23;
+    --divider-color: #2A2E35;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  header {
+    background: var(--header-bg);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--card-border);
+    padding: 0.9rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand-logo-svg {
+    width: 38px;
+    height: 38px;
+    background: var(--burgundy);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(217, 35, 56, 0.25);
+  }
+
+  .brand-logo-svg svg {
+    width: 22px;
+    height: 22px;
+    stroke: white;
+  }
+
+  .brand-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+
+  .brand-subtitle {
+    font-size: 0.75rem;
+    color: var(--burgundy);
+    font-weight: 700;
+  }
+
+  nav.top-nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .nav-tab-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0.5rem 0.2rem;
+    position: relative;
+    transition: color 0.2s ease;
+  }
+
+  .nav-tab-btn:hover {
+    color: var(--text-primary);
+  }
+
+  .nav-tab-btn.active {
+    color: var(--burgundy);
+    font-weight: 700;
+  }
+
+  .nav-tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -16px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--burgundy);
+    border-radius: 3px 3px 0 0;
+  }
+
+  .btn-theme-toggle {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    padding: 0.45rem 0.85rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+  }
+
+  .btn-theme-toggle:hover {
+    border-color: var(--burgundy);
+    color: var(--burgundy);
+  }
+
+  main {
+    flex: 1;
+    max-width: 920px;
+    width: 100%;
+    margin: 2rem auto 4rem auto;
+    padding: 0 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .view-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .page-main-header {
+    margin-bottom: 0.25rem;
+  }
+
+  .page-main-title {
+    font-size: 1.7rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    margin-bottom: 0.4rem;
+  }
+
+  .page-main-subtitle {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 1.75rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  }
+
+  .section-num-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.35rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-subtext {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  label {
+    font-size: 0.83rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 0.2rem;
+  }
+
+  .badge-tag {
+    background: var(--bg-body);
+    border: 1px solid var(--card-border);
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 12px;
+    margin-left: 8px;
+  }
+
+  input[type="text"], textarea {
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text-primary);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    outline: none;
+    transition: border 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  input[type="text"]:focus, textarea:focus {
+    border-color: var(--burgundy);
+    box-shadow: 0 0 0 3px rgba(217, 35, 56, 0.1);
+  }
+
+  textarea {
+    width: 100%;
+    height: 160px;
+    resize: vertical;
+    line-height: 1.5;
+  }
+
+  /* Export Format Flex Row Layout */
+  .export-section-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    border-top: 1px solid var(--card-border);
+    padding-top: 1.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .export-section-info {
+    flex: 1;
+  }
+
+  .export-section-info .section-subtext {
+    margin-bottom: 0;
+  }
+
+  .format-cards-grid {
+    display: flex;
+    gap: 1rem;
+    width: 380px;
+  }
+
+  .format-card {
+    flex: 1;
+    background: var(--card-bg);
+    border: 1.5px solid var(--card-border);
+    border-radius: 10px;
+    padding: 0.75rem 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+  }
+
+  .format-card:hover {
+    border-color: var(--burgundy-border);
+  }
+
+  .format-card.selected {
+    background: var(--burgundy-light);
+    border-color: var(--burgundy);
+  }
+
+  .format-card-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .format-card-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--bg-body);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--card-border);
+  }
+
+  .format-card.selected .format-card-icon {
+    border-color: var(--burgundy-border);
+  }
+
+  .format-card-icon svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--burgundy);
+  }
+
+  .format-card-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .format-card-ext {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  .radio-check-circle {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .format-card.selected .radio-check-circle {
+    background: var(--burgundy);
+    border-color: var(--burgundy);
+  }
+
+  .radio-check-circle svg {
+    width: 11px;
+    height: 11px;
+    stroke: white;
+    display: none;
+  }
+
+  .format-card.selected .radio-check-circle svg {
+    display: block;
+  }
+
+  .btn-submit-main {
+    background: var(--burgundy);
+    color: white;
+    border: none;
+    padding: 0.95rem 1.75rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.2s ease;
+    width: 100%;
+    margin-top: 0.5rem;
+    box-shadow: 0 4px 14px rgba(217, 35, 56, 0.25);
+  }
+
+  .btn-submit-main:hover {
+    background: var(--burgundy-hover);
+    transform: translateY(-1px);
+  }
+
+  .btn-submit-main:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-back-subtle {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s ease;
+    padding: 0;
+    margin-bottom: 2rem;
+  }
+
+  .btn-back-subtle:hover {
+    color: var(--burgundy);
+  }
+
+  /* History Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.5rem;
+  }
+
+  th {
+    background: var(--table-header);
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.85rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  td {
+    padding: 0.95rem 1rem;
+    border-bottom: 1px solid var(--card-border);
+    font-size: 0.88rem;
+    color: var(--text-primary);
+  }
+
+  tr:hover td {
+    background: var(--burgundy-light);
+  }
+
+  .link-btn {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .link-btn:hover {
+    color: var(--burgundy);
+    text-decoration: underline;
+  }
+
+  .btn-action-icon {
+    background: var(--bg-body);
+    border: 1px solid var(--card-border);
+    color: var(--text-secondary);
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+  }
+
+  .btn-action-icon:hover {
+    border-color: var(--burgundy);
+    color: var(--burgundy);
+  }
+
+  .btn-action-del {
+    background: var(--burgundy-light);
+    border: 1px solid var(--burgundy-border);
+    color: var(--burgundy);
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    margin-left: 6px;
+  }
+
+  .btn-action-del:hover {
+    background: var(--burgundy);
+    color: white;
+  }
+
+  /* NOTION-STYLE ABOUT PAGE STYLING */
+  .notion-about-container {
+    max-width: 720px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 1rem 0 3rem 0;
+  }
+
+  .notion-h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--burgundy);
+    margin-bottom: 1rem;
+  }
+
+  .notion-h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+    margin-top: 2.5rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .notion-p {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin-bottom: 1.2rem;
+  }
+
+  .notion-divider {
+    border: none;
+    height: 1px;
+    background: var(--divider-color);
+    margin: 2.5rem 0;
+  }
+
+  .notion-step {
+    margin-bottom: 1.4rem;
+  }
+
+  .notion-step-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.3rem;
+  }
+
+  .notion-step-num {
+    color: var(--burgundy);
+    font-weight: 700;
+  }
+
+  .notion-step-desc {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(13, 15, 18, 0.75);
+    backdrop-filter: blur(6px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+  }
+
+  .modal {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 650px;
+    padding: 1.75rem;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid var(--card-border);
+    padding-bottom: 0.75rem;
+  }
+
+  .modal-close {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .empty-state {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 2.5rem 1rem;
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-logo-svg">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+        <line x1="16" y1="13" x2="8" y2="13"></line>
+        <line x1="16" y1="17" x2="8" y2="17"></line>
+        <polyline points="10 9 9 9 8 9"></polyline>
+      </svg>
+    </div>
+    <div>
+      <div class="brand-title">Resume Generator</div>
+      <div class="brand-subtitle">by Talvios</div>
+    </div>
+  </div>
+
+  <nav class="top-nav">
+    <button class="nav-tab-btn active" id="tabBtnGen" onclick="switchView('main')">Generator</button>
+    <button class="nav-tab-btn" onclick="openConfigModal()">Configuration</button>
+    <button class="nav-tab-btn" id="tabBtnAbout" onclick="switchView('about')">About</button>
+    <button class="btn-theme-toggle" onclick="toggleTheme()" id="themeToggleBtn">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      <span id="themeBtnText">Light</span>
+    </button>
+  </nav>
+</header>
+
+<main>
+  <!-- VIEW 1: MAIN GENERATOR & HISTORY -->
+  <div id="viewMain" class="view-container">
+    <div class="page-main-header">
+      <h1 class="page-main-title">Tailor your resume to a job</h1>
+      <p class="page-main-subtitle">Paste a job description and we'll identify the role, keywords, and relevant experience to create a tailored version of your resume.</p>
+    </div>
+
+    <!-- MAIN FORM CARD -->
+    <div class="card">
+      <div class="section-num-title">1. Job Details</div>
+      <div class="section-subtext">Company and role are optional. Both can be detected automatically from the job description.</div>
+      
+      <form id="genForm" onsubmit="handleGenerate(event)">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="company">Company Name <span class="badge-tag">Optional • Auto-detected</span></label>
+            <input type="text" id="company" placeholder="e.g. Google">
+          </div>
+          <div class="form-group">
+            <label for="role">Role Title <span class="badge-tag">Optional • Auto-detected</span></label>
+            <input type="text" id="role" placeholder="e.g. Senior Data Analyst">
+          </div>
+        </div>
+        
+        <div class="form-group" style="margin-bottom: 1.5rem;">
+          <label for="jd">Job Description <span style="color: var(--burgundy);">*</span></label>
+          <div style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 0.45rem;">Paste the complete job description. The more details, the better the results.</div>
+          <textarea id="jd" placeholder="Paste the complete job description here..." required></textarea>
+        </div>
+
+        <!-- SECTION 2: EXPORT FORMAT -->
+        <div class="export-section-row">
+          <div class="export-section-info">
+            <div class="section-num-title">2. Export Format</div>
+            <div class="section-subtext">Choose your preferred file format.</div>
+          </div>
+
+          <div class="format-cards-grid">
+            <!-- PDF CARD -->
+            <div class="format-card selected" id="cardPdf" onclick="selectFormat('pdf')">
+              <div class="format-card-left">
+                <div class="format-card-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                </div>
+                <div>
+                  <div class="format-card-title">PDF</div>
+                  <div class="format-card-ext">.pdf</div>
+                </div>
+              </div>
+              <div class="radio-check-circle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </div>
+            </div>
+
+            <!-- WORD CARD -->
+            <div class="format-card" id="cardDocx" onclick="selectFormat('docx')">
+              <div class="format-card-left">
+                <div class="format-card-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                </div>
+                <div>
+                  <div class="format-card-title">Word</div>
+                  <div class="format-card-ext">.docx</div>
+                </div>
+              </div>
+              <div class="radio-check-circle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="btn-submit-main">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          <span>Generate Tailored Resume</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- HISTORY TABLE CARD -->
+    <div class="card">
+      <div class="section-num-title" style="margin-bottom: 1rem;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        Resume History
+      </div>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 50px;">#</th>
+              <th>Resume Name</th>
+              <th>Role</th>
+              <th>Company</th>
+              <th style="width: 180px;">Date Generated</th>
+              <th style="width: 100px; text-align: center;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="resumeRows">
+            <tr>
+              <td colspan="6" class="empty-state">Loading history...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW 2: NOTION-STYLE ABOUT PAGE -->
+  <div id="viewAbout" class="view-container" style="display: none;">
+    <div class="notion-about-container">
+      <button class="btn-back-subtle" onclick="switchView('main')">
+        ← Back
+      </button>
+
+      <h1 class="notion-h1">About</h1>
+
+      <p class="notion-p">
+        Resume Generator is a tool I built to make one part of job searching a little less tedious: tailoring your resume for each role.
+      </p>
+
+      <hr class="notion-divider">
+
+      <h2 class="notion-h2">Why I built it</h2>
+      
+      <p class="notion-p">
+        A good resume isn't necessarily the same resume for every job.
+      </p>
+
+      <p class="notion-p">
+        But tailoring it usually means going back to the job description, figuring out what matters, rewriting a few bullet points, and doing the formatting all over again.
+      </p>
+
+      <p class="notion-p">
+        I wanted a simpler way to do that while keeping my actual experience at the center.
+      </p>
+
+      <hr class="notion-divider">
+
+      <h2 class="notion-h2">How it works</h2>
+
+      <div class="notion-step">
+        <div class="notion-step-title"><span class="notion-step-num">01 ·</span> Start with your resume</div>
+        <div class="notion-step-desc">Your existing resume stays the foundation.</div>
+      </div>
+
+      <div class="notion-step">
+        <div class="notion-step-title"><span class="notion-step-num">02 ·</span> Add the job description</div>
+        <div class="notion-step-desc">Paste the JD for the role you're applying to. The company and role can be picked up automatically.</div>
+      </div>
+
+      <div class="notion-step">
+        <div class="notion-step-title"><span class="notion-step-num">03 ·</span> Tailor it</div>
+        <div class="notion-step-desc">The relevant skills, keywords, and experience are brought forward based on the role.</div>
+      </div>
+
+      <div class="notion-step">
+        <div class="notion-step-title"><span class="notion-step-num">04 ·</span> Export</div>
+        <div class="notion-step-desc">Download the finished resume as a PDF or Word document.</div>
+      </div>
+
+      <hr class="notion-divider">
+
+      <h2 class="notion-h2">Keep it real</h2>
+
+      <p class="notion-p">
+        The point isn't to make you look qualified for something you've never done.
+      </p>
+
+      <p class="notion-p">
+        Your experience stays your experience. Resume Generator is there to help you present the right parts of it for the role you're applying for.
+      </p>
+
+      <hr class="notion-divider">
+
+      <h2 class="notion-h2">About me</h2>
+
+      <p class="notion-p">
+        I'm Swagat Shandilya. My work sits at the intersection of data, automation, and software. I've worked on data analysis and visualization, built automation workflows and n8n pipelines, and developed websites and other tools.
+      </p>
+
+      <p class="notion-p">
+        I like working on problems where technology can remove unnecessary manual work, whether that's through better analysis, an automated workflow, or a product.
+      </p>
+
+      <p class="notion-p">
+        <strong>Talvios</strong> is my product brand, where I build and bring these ideas together into useful products.
+      </p>
+
+      <p class="notion-p">
+        Resume Generator is one of them.
+      </p>
+    </div>
+  </div>
+</main>
+
+<!-- Config Modal -->
+<div class="modal-overlay" id="configModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 style="font-weight: 700; display:flex; align-items:center; gap:8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        Configuration & Base Resume Path
+      </h3>
+      <button class="modal-close" onclick="closeConfigModal()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    <form onsubmit="handleSaveConfig(event)">
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label>Google Gemini API Key (Primary Default — Free)</label>
+        <input type="text" id="cfgGemini" placeholder="AIzaSy...">
+      </div>
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label>Groq API Key (Fallback — Free)</label>
+        <input type="text" id="cfgGroq" placeholder="gsk_...">
+      </div>
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label>Base Resume File Path (.pdf, .docx, .txt, or .md)</label>
+        <input type="text" id="cfgBasePath" placeholder="/Users/name/resumes/base_resume.pdf">
+      </div>
+      <div class="form-group" style="margin-bottom: 1.25rem;">
+        <label>Candidate Name</label>
+        <input type="text" id="cfgCandidate" placeholder="Candidate Name">
+      </div>
+      <button type="submit" class="btn-submit-main">Save Settings</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  let selectedFormat = 'pdf';
+
+  function selectFormat(fmt) {
+    selectedFormat = fmt;
+    document.getElementById('cardPdf').classList.toggle('selected', fmt === 'pdf');
+    document.getElementById('cardDocx').classList.toggle('selected', fmt === 'docx');
+  }
+
+  function switchView(viewName) {
+    document.getElementById('viewMain').style.display = viewName === 'main' ? 'flex' : 'none';
+    document.getElementById('viewAbout').style.display = viewName === 'about' ? 'block' : 'none';
+    
+    document.getElementById('tabBtnGen').classList.toggle('active', viewName === 'main');
+    document.getElementById('tabBtnAbout').classList.toggle('active', viewName === 'about');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    const themeText = document.getElementById('themeBtnText');
+    if (themeText) {
+      themeText.textContent = theme === 'light' ? 'Light' : 'Dark';
+    }
+    localStorage.setItem('resume_gen_theme', theme);
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    applyTheme(current === 'light' ? 'dark' : 'light');
+  }
+
+  async function loadResumes() {
+    try {
+      const res = await fetch('/api/resumes');
+      const data = await res.json();
+      renderRows(data.resumes || []);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  function renderRows(resumes) {
+    const tbody = document.getElementById('resumeRows');
+    if (!resumes.length) {
+      tbody.innerHTML = `<tr><td colspan="6" class="empty-state">No tailored resumes generated yet. Paste a JD above to begin!</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = resumes.map(r => `
+      <tr>
+        <td><strong>${r.serial}</strong></td>
+        <td>
+          <a href="/download/${r.filename}" target="_blank" class="link-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            ${r.filename}
+          </a>
+        </td>
+        <td>${r.role || 'Auto-Detected'}</td>
+        <td>${r.company || 'Auto-Detected'}</td>
+        <td style="color: var(--text-secondary);">${r.date_generated}</td>
+        <td style="text-align: center;">
+          <a href="/download/${r.filename}" class="btn-action-icon" title="Download">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          </a>
+          <button class="btn-action-del" onclick="deleteResume('${r.filename}')" title="Delete">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          </button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  async function handleGenerate(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const company = document.getElementById('company').value.trim();
+    const role = document.getElementById('role').value.trim();
+    const jd = document.getElementById('jd').value.trim();
+
+    if (!jd) return;
+
+    btn.disabled = true;
+    btn.innerHTML = `<div class="spinner"></div> <span>Tailoring Resume & Rendering ${selectedFormat.toUpperCase()}...</span>`;
+
+    try {
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ company, role, jd, output_format: selectedFormat })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        alert("Error: " + (data.error || "Failed to generate resume"));
+      } else {
+        renderRows(data.resumes);
+        document.getElementById('company').value = '';
+        document.getElementById('role').value = '';
+        document.getElementById('jd').value = '';
+      }
+    } catch (err) {
+      alert("Network Error: " + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+        <span>Generate Tailored Resume</span>
+      `;
+    }
+  }
+
+  async function deleteResume(filename) {
+    if (!confirm(`Are you sure you want to delete ${filename}?`)) return;
+    try {
+      const res = await fetch('/api/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename })
+      });
+      const data = await res.json();
+      if (data.ok) renderRows(data.resumes);
+    } catch (e) {
+      alert("Delete failed: " + e.message);
+    }
+  }
+
+  async function openConfigModal() {
+    document.getElementById('configModal').style.display = 'flex';
+    try {
+      const res = await fetch('/api/config');
+      const cfg = await res.json();
+      document.getElementById('cfgGemini').value = cfg.gemini_api_key || '';
+      document.getElementById('cfgGroq').value = cfg.groq_api_key || '';
+      document.getElementById('cfgBasePath').value = cfg.base_resume_path || '';
+      document.getElementById('cfgCandidate').value = cfg.candidate_name || '';
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  function closeConfigModal() {
+    document.getElementById('configModal').style.display = 'none';
+  }
+
+  async function handleSaveConfig(e) {
+    e.preventDefault();
+    const gemini_api_key = document.getElementById('cfgGemini').value.trim();
+    const groq_api_key = document.getElementById('cfgGroq').value.trim();
+    const base_resume_path = document.getElementById('cfgBasePath').value.trim();
+    const candidate_name = document.getElementById('cfgCandidate').value.trim();
+
+    try {
+      const res = await fetch('/api/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ gemini_api_key, groq_api_key, base_resume_path, candidate_name })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        alert("Configuration saved successfully!");
+        closeConfigModal();
+      }
+    } catch (err) {
+      alert("Save failed: " + err.message);
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('resume_gen_theme') || 'light';
+    applyTheme(savedTheme);
+    loadResumes();
+  });
+</script>
+
+</body>
+</html>
