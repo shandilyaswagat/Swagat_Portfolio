@@ -55,7 +55,7 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
               <div className="flex items-center gap-3">
                 <span className="w-3 h-3 rounded-full bg-[#B600A8] animate-pulse" />
                 <h3 className="text-base sm:text-xl font-medium uppercase text-[#D7E2EA]">
-                  {title} — Enlarge & Fullscreen View
+                  {title}
                 </h3>
               </div>
 

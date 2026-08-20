@@ -135,11 +135,13 @@ const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress
 
                 {/* Enlarge Hover Overlay */}
                 <button
-                  onClick={() => onEnlarge(`${project.name} — Image ${imgIndex + 1}`, imgSrc)}
-                  className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2 text-white text-xs font-medium uppercase tracking-widest cursor-pointer rounded-[30px] sm:rounded-[40px] md:rounded-[50px]"
+                  onClick={() => onEnlarge(`${project.name}`, imgSrc)}
+                  className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center text-white cursor-pointer rounded-[30px] sm:rounded-[40px] md:rounded-[50px]"
+                  title="Enlarge"
                 >
-                  <Maximize2 className="w-4 h-4 text-[#B600A8]" />
-                  <span>Enlarge Image</span>
+                  <div className="p-3 rounded-full bg-black/80 border border-white/20 hover:scale-110 transition-transform">
+                    <Maximize2 className="w-5 h-5 text-[#B600A8]" />
+                  </div>
                 </button>
               </div>
             ))}
@@ -162,11 +164,11 @@ const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress
 
                 {/* Enlarge Dashboard Button */}
                 <button
-                  onClick={() => onEnlarge(`${project.name} HTML Dashboard`, undefined, project.htmlPath)}
-                  className="absolute top-4 right-4 z-20 bg-black/80 hover:bg-[#B600A8] text-white text-xs font-medium uppercase tracking-wider px-4 py-2 rounded-full border border-white/20 transition-all cursor-pointer flex items-center gap-1.5 shadow-lg"
+                  onClick={() => onEnlarge(`${project.name}`, undefined, project.htmlPath)}
+                  className="absolute top-4 right-4 z-20 bg-black/80 hover:bg-[#B600A8] text-white p-2.5 rounded-full border border-white/20 transition-all cursor-pointer shadow-lg hover:scale-110"
+                  title="Enlarge"
                 >
-                  <Maximize2 className="w-3.5 h-3.5" />
-                  <span>Enlarge View</span>
+                  <Maximize2 className="w-4 h-4 text-white" />
                 </button>
               </div>
             ) : (
@@ -179,11 +181,13 @@ const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress
                     loading="lazy"
                   />
                   <button
-                    onClick={() => onEnlarge(`${project.name} Main View`, project.mainImage)}
-                    className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2 text-white text-xs font-medium uppercase tracking-widest cursor-pointer rounded-[30px] sm:rounded-[40px] md:rounded-[50px]"
+                    onClick={() => onEnlarge(`${project.name}`, project.mainImage)}
+                    className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center text-white cursor-pointer rounded-[30px] sm:rounded-[40px] md:rounded-[50px]"
+                    title="Enlarge"
                   >
-                    <Maximize2 className="w-4 h-4 text-[#B600A8]" />
-                    <span>Enlarge Image</span>
+                    <div className="p-3 rounded-full bg-black/80 border border-white/20 hover:scale-110 transition-transform">
+                      <Maximize2 className="w-5 h-5 text-[#B600A8]" />
+                    </div>
                   </button>
                 </div>
               )
