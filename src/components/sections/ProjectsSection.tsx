@@ -1,9 +1,7 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { FadeIn } from '../ui/FadeIn';
 import { LiveProjectButton } from '../ui/LiveProjectButton';
-import { DashboardModal } from '../ui/DashboardModal';
-import { Layout } from 'lucide-react';
 
 interface Project {
   id: string;
@@ -25,9 +23,9 @@ const PROJECTS: Project[] = [
     description: "End-to-end automated job search, filtering, and application pipeline built using n8n workflow automation and a custom web dashboard.",
     link: "https://topmate.io/swagat_shandilya/2235452?utm_source=public_profile&utm_campaign=swagat_shandilya",
     htmlPath: "/dashboards/jobhunt_dashboard.html",
-    col1Img1: "/dashboards/Overall_Dashboard.PNG",
-    col1Img2: "/dashboards/Cancellation_Dashboard.PNG",
-    col2Img: "/dashboards/Overall_Dashboard.PNG",
+    col1Img1: "/dashboards/JobHuntPipeline.png",
+    col1Img2: "/dashboards/Resume_generator.png",
+    col2Img: "/dashboards/JobHuntPipeline.png",
   },
   {
     id: "02",
@@ -38,7 +36,7 @@ const PROJECTS: Project[] = [
     htmlPath: "/dashboards/coldmail_dashboard.html",
     col1Img1: "/dashboards/ColdMailSender.png",
     col1Img2: "/dashboards/Claim_Risk_Analysis.png",
-    col2Img: "/dashboards/Insurance_Performance_Dashboard.png",
+    col2Img: "/dashboards/ColdMailSender.png",
   },
   {
     id: "03",
@@ -48,7 +46,7 @@ const PROJECTS: Project[] = [
     htmlPath: "/dashboards/resume_gen_dashboard.html",
     col1Img1: "/dashboards/Resume_generator.png",
     col1Img2: "/dashboards/Delay_DashboardPNG.PNG",
-    col2Img: "/dashboards/Airport_Dashboard.PNG",
+    col2Img: "/dashboards/Resume_generator.png",
   },
   {
     id: "04",
@@ -75,10 +73,9 @@ interface CardProps {
   index: number;
   totalCards: number;
   progress: any;
-  onOpenModal: (project: Project) => void;
 }
 
-const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress, onOpenModal }) => {
+const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   
   const targetScale = 1 - (totalCards - 1 - index) * 0.03;
@@ -94,7 +91,7 @@ const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress
         style={{ scale }}
         className="w-full h-full bg-[#0C0C0C] border-2 border-[#D7E2EA] rounded-[40px] sm:rounded-[50px] md:rounded-[60px] p-4 sm:p-6 md:p-8 flex flex-col justify-between overflow-hidden shadow-2xl"
       >
-        {/* Top Row Header */}
+        {/* Top Row Header - Clean with title, category, and live topmate link */}
         <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-[#D7E2EA]/20">
           <div className="flex items-center gap-4 sm:gap-6">
             <span
@@ -113,27 +110,8 @@ const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            {/* HTML Dashboard Rebuild Button */}
-            {project.htmlPath && (
-              <button
-                onClick={() => onOpenModal(project)}
-                className="
-                  inline-flex items-center gap-2 rounded-full 
-                  border-2 border-[#B600A8] bg-[#B600A8]/10 text-white font-medium uppercase tracking-widest 
-                  px-6 py-2.5 sm:px-8 sm:py-3
-                  text-xs sm:text-sm
-                  hover:bg-[#B600A8]/20 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-lg
-                "
-              >
-                <Layout className="w-4 h-4 text-[#B600A8]" />
-                <span>HTML Dashboard View</span>
-              </button>
-            )}
-
-            {/* Live Project Topmate Link */}
-            {project.link && <LiveProjectButton href={project.link} />}
-          </div>
+          {/* Topmate Live Project Button */}
+          {project.link && <LiveProjectButton href={project.link} />}
         </div>
 
         {/* Bottom Row Image Grid */}
@@ -165,22 +143,21 @@ const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress
             </div>
           </div>
 
-          {/* Right Column (60% width / 7 cols) - Tall Image or Interactive HTML Dashboard */}
-          <div className="md:col-span-7 h-full min-h-[220px] rounded-[40px] sm:rounded-[50px] md:rounded-[60px] overflow-hidden relative group">
+          {/* Right Column (60% width / 7 cols) - Cleanly fitted HTML Dashboard view or tall image */}
+          <div className="md:col-span-7 h-full min-h-[220px] rounded-[40px] sm:rounded-[50px] md:rounded-[60px] overflow-hidden bg-[#0C0C0C] relative">
             {project.htmlPath ? (
-              <div className="w-full h-full relative">
+              <div className="w-full h-full overflow-hidden rounded-[40px] sm:rounded-[50px] md:rounded-[60px]">
                 <iframe
                   src={project.htmlPath}
-                  title={`${project.name} HTML Rebuild`}
+                  title={`${project.name} HTML Dashboard`}
                   className="w-full h-full border-none rounded-[40px] sm:rounded-[50px] md:rounded-[60px] pointer-events-auto"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    border: '0',
+                  }}
                   loading="lazy"
                 />
-                <button
-                  onClick={() => onOpenModal(project)}
-                  className="absolute top-4 right-4 z-20 bg-black/80 hover:bg-black text-white text-xs font-medium uppercase tracking-wider px-4 py-2 rounded-full border border-white/20 transition-all cursor-pointer"
-                >
-                  Expand Full Screen
-                </button>
               </div>
             ) : (
               <img
@@ -199,8 +176,6 @@ const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress
 
 export const ProjectsSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end'],
@@ -231,21 +206,10 @@ export const ProjectsSection: React.FC = () => {
               index={index}
               totalCards={PROJECTS.length}
               progress={scrollYProgress}
-              onOpenModal={(proj) => setSelectedProject(proj)}
             />
           ))}
         </div>
       </div>
-
-      {/* HTML Dashboard Preview Modal */}
-      {selectedProject && (
-        <DashboardModal
-          isOpen={!!selectedProject}
-          onClose={() => setSelectedProject(null)}
-          title={selectedProject.name}
-          htmlPath={selectedProject.htmlPath || ""}
-        />
-      )}
     </section>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 const ROW1_IMAGES = [
+  "/dashboards/JobHuntPipeline.png",
   "/dashboards/ColdMailSender.png",
   "/dashboards/Airport_Dashboard.PNG",
   "/dashboards/Cancellation_Dashboard.PNG",
