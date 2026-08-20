@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 const ROW1_IMAGES = [
+  "/dashboards/ColdMailSender.png",
   "/dashboards/Airport_Dashboard.PNG",
   "/dashboards/Cancellation_Dashboard.PNG",
   "/dashboards/Claim_Risk_Analysis.png",
@@ -8,6 +9,7 @@ const ROW1_IMAGES = [
 ];
 
 const ROW2_IMAGES = [
+  "/dashboards/Resume_generator.png",
   "/dashboards/Insurance_Performance_Dashboard.png",
   "/dashboards/Maven_Space_Analytics.png",
   "/dashboards/Overall_Dashboard.PNG",
