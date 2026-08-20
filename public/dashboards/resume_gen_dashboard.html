@@ -25,19 +25,19 @@
   }
 
   :root[data-theme="dark"] {
-    --bg-body: #0D0F12;
+    --bg-body: #0C0C0C;
     --card-bg: #14171C;
     --card-border: #2A2E35;
     --input-bg: #191D23;
     --input-border: #334155;
-    --text-primary: #F5F5F5;
-    --text-secondary: #A7ABB3;
-    --text-muted: #64748B;
+    --text-primary: #FFFFFF;
+    --text-secondary: #CBD5E1;
+    --text-muted: #94A3B8;
     --burgundy: #9E1B2C;
     --burgundy-hover: #B8253B;
     --burgundy-light: #2A1518;
     --burgundy-border: rgba(158, 27, 44, 0.5);
-    --header-bg: rgba(13, 15, 18, 0.95);
+    --header-bg: rgba(20, 23, 28, 0.95);
     --table-header: #191D23;
     --divider-color: #2A2E35;
   }
@@ -952,8 +952,8 @@
   }
 
   function toggleTheme() {
-    const current = document.documentElement.getAttribute('data-theme') || 'light';
-    applyTheme(current === 'light' ? 'dark' : 'light');
+    const current = document.documentElement.getAttribute('data-theme') || 'dark';
+    applyTheme(current === 'dark' ? 'light' : 'dark');
   }
 
   async function loadResumes() {
@@ -1091,7 +1091,7 @@
   }
 
   window.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('resume_gen_theme') || 'light';
+    const savedTheme = localStorage.getItem('resume_gen_theme') || 'dark';
     applyTheme(savedTheme);
     loadResumes();
   });
