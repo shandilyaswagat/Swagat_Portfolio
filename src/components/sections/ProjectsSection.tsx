@@ -1,7 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { FadeIn } from '../ui/FadeIn';
 import { LiveProjectButton } from '../ui/LiveProjectButton';
+import { DashboardModal } from '../ui/DashboardModal';
+import { Layout } from 'lucide-react';
 
 interface Project {
   id: string;
@@ -9,6 +11,7 @@ interface Project {
   category: string;
   description: string;
   link?: string;
+  htmlPath?: string;
   col1Img1: string;
   col1Img2: string;
   col2Img: string;
@@ -21,6 +24,7 @@ const PROJECTS: Project[] = [
     category: "n8n & Web App",
     description: "End-to-end automated job search, filtering, and application pipeline built using n8n workflow automation and a custom web dashboard.",
     link: "https://topmate.io/swagat_shandilya/2235452?utm_source=public_profile&utm_campaign=swagat_shandilya",
+    htmlPath: "/dashboards/jobhunt_dashboard.html",
     col1Img1: "/dashboards/Resume_generator.png",
     col1Img2: "/dashboards/Cancellation_Dashboard.PNG",
     col2Img: "/dashboards/Overall_Dashboard.PNG",
@@ -31,6 +35,7 @@ const PROJECTS: Project[] = [
     category: "n8n & AI Workflow",
     description: "Automated personalized cold outreach pipeline leveraging n8n, AI lead enrichment, and targeted email sequence triggers.",
     link: "https://topmate.io/swagat_shandilya/2238129?utm_source=public_profile&utm_campaign=swagat_shandilya",
+    htmlPath: "/dashboards/coldmail_dashboard.html",
     col1Img1: "/dashboards/ColdMailSender.png",
     col1Img2: "/dashboards/Insurance_Performance_Dashboard.png",
     col2Img: "/dashboards/Uber_dashboard.png",
@@ -40,6 +45,7 @@ const PROJECTS: Project[] = [
     name: "Resume Generator",
     category: "Web & Automation",
     description: "Dynamic web application and automated generator that tailors, formats, and exports resumes specifically matched to target job descriptions.",
+    htmlPath: "/dashboards/resume_gen_dashboard.html",
     col1Img1: "/dashboards/Resume_generator.png",
     col1Img2: "/dashboards/Claim_Risk_Analysis.png",
     col2Img: "/dashboards/Airport_Dashboard.PNG",
@@ -60,9 +66,10 @@ interface CardProps {
   index: number;
   totalCards: number;
   progress: any;
+  onOpenModal: (project: Project) => void;
 }
 
-const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress }) => {
+const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress, onOpenModal }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   
   const targetScale = 1 - (totalCards - 1 - index) * 0.03;
@@ -97,7 +104,27 @@ const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress
             </div>
           </div>
 
-          <LiveProjectButton href={project.link} />
+          <div className="flex flex-wrap items-center gap-3">
+            {/* HTML Dashboard View Button */}
+            {project.htmlPath && (
+              <button
+                onClick={() => onOpenModal(project)}
+                className="
+                  inline-flex items-center gap-2 rounded-full 
+                  border-2 border-[#B600A8] bg-[#B600A8]/10 text-white font-medium uppercase tracking-widest 
+                  px-6 py-2.5 sm:px-8 sm:py-3
+                  text-xs sm:text-sm
+                  hover:bg-[#B600A8]/20 transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-lg
+                "
+              >
+                <Layout className="w-4 h-4 text-[#B600A8]" />
+                <span>HTML Dashboard View</span>
+              </button>
+            )}
+
+            {/* Live Project Topmate Button */}
+            {project.link && <LiveProjectButton href={project.link} />}
+          </div>
         </div>
 
         {/* Bottom Row Image Grid */}
@@ -130,13 +157,22 @@ const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress
           </div>
 
           {/* Right Column (60% width / 7 cols) - 1 tall image */}
-          <div className="md:col-span-7 h-full min-h-[220px] rounded-[40px] sm:rounded-[50px] md:rounded-[60px] overflow-hidden">
+          <div className="md:col-span-7 h-full min-h-[220px] rounded-[40px] sm:rounded-[50px] md:rounded-[60px] overflow-hidden relative group">
             <img
               src={project.col2Img}
               alt={`${project.name} full preview`}
               className="w-full h-full object-cover rounded-[40px] sm:rounded-[50px] md:rounded-[60px]"
               loading="lazy"
             />
+            {project.htmlPath && (
+              <button
+                onClick={() => onOpenModal(project)}
+                className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2 text-white font-medium uppercase tracking-widest text-sm rounded-[40px] sm:rounded-[50px] md:rounded-[60px] cursor-pointer"
+              >
+                <Layout className="w-5 h-5 text-[#B600A8]" />
+                <span>Click to Launch Live HTML Dashboard</span>
+              </button>
+            )}
           </div>
         </div>
       </motion.div>
@@ -146,6 +182,8 @@ const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress
 
 export const ProjectsSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end'],
@@ -176,10 +214,21 @@ export const ProjectsSection: React.FC = () => {
               index={index}
               totalCards={PROJECTS.length}
               progress={scrollYProgress}
+              onOpenModal={(proj) => setSelectedProject(proj)}
             />
           ))}
         </div>
       </div>
+
+      {/* HTML Dashboard Preview Modal */}
+      {selectedProject && (
+        <DashboardModal
+          isOpen={!!selectedProject}
+          onClose={() => setSelectedProject(null)}
+          title={selectedProject.name}
+          htmlPath={selectedProject.htmlPath || ""}
+        />
+      )}
     </section>
   );
 };
