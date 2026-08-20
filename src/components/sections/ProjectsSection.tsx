@@ -10,9 +10,8 @@ interface Project {
   description: string;
   link?: string;
   htmlPath?: string;
-  col1Img1: string;
-  col1Img2: string;
-  col2Img: string;
+  images: string[];
+  mainImage?: string;
 }
 
 const PROJECTS: Project[] = [
@@ -23,9 +22,7 @@ const PROJECTS: Project[] = [
     description: "End-to-end automated job search, filtering, and application pipeline built using n8n workflow automation and a custom web dashboard.",
     link: "https://topmate.io/swagat_shandilya/2235452?utm_source=public_profile&utm_campaign=swagat_shandilya",
     htmlPath: "/dashboards/jobhunt_dashboard.html",
-    col1Img1: "/dashboards/JobHuntPipeline.png",
-    col1Img2: "/dashboards/Resume_generator.png",
-    col2Img: "/dashboards/JobHuntPipeline.png",
+    images: ["/dashboards/JobHuntPipeline.png"],
   },
   {
     id: "02",
@@ -34,9 +31,7 @@ const PROJECTS: Project[] = [
     description: "Automated personalized cold outreach pipeline leveraging n8n, AI lead enrichment, and targeted email sequence triggers.",
     link: "https://topmate.io/swagat_shandilya/2238129?utm_source=public_profile&utm_campaign=swagat_shandilya",
     htmlPath: "/dashboards/coldmail_dashboard.html",
-    col1Img1: "/dashboards/ColdMailSender.png",
-    col1Img2: "/dashboards/Claim_Risk_Analysis.png",
-    col2Img: "/dashboards/ColdMailSender.png",
+    images: ["/dashboards/ColdMailSender.png"],
   },
   {
     id: "03",
@@ -44,27 +39,29 @@ const PROJECTS: Project[] = [
     category: "Web & Automation",
     description: "Dynamic web application and automated generator that tailors, formats, and exports resumes specifically matched to target job descriptions.",
     htmlPath: "/dashboards/resume_gen_dashboard.html",
-    col1Img1: "/dashboards/Resume_generator.png",
-    col1Img2: "/dashboards/Delay_DashboardPNG.PNG",
-    col2Img: "/dashboards/Resume_generator.png",
+    images: ["/dashboards/Resume_generator.png"],
   },
   {
     id: "04",
     name: "Customer Retention & Churn Analytics",
     category: "PwC BI Suite",
     description: "Interactive Power BI dashboard suite and Python EDA cohort analysis identifying high-risk customer behavior and boosting dashboard speed by 35%.",
-    col1Img1: "/dashboards/Claim_Risk_Analysis.png",
-    col1Img2: "/dashboards/Insurance_Performance_Dashboard.png",
-    col2Img: "/dashboards/Uber_dashboard.png",
+    images: [
+      "/dashboards/Claim_Risk_Analysis.png",
+      "/dashboards/Insurance_Performance_Dashboard.png",
+    ],
+    mainImage: "/dashboards/Uber_dashboard.png",
   },
   {
     id: "05",
     name: "Flight & Airport Operations Analytics",
     category: "Power BI Suite",
     description: "Comprehensive Power BI suite tracking flight delays, cancellation rates, and operational efficiency metrics.",
-    col1Img1: "/dashboards/Airport_Dashboard.PNG",
-    col1Img2: "/dashboards/Cancellation_Dashboard.PNG",
-    col2Img: "/dashboards/Overall_Dashboard.PNG",
+    images: [
+      "/dashboards/Airport_Dashboard.PNG",
+      "/dashboards/Cancellation_Dashboard.PNG",
+    ],
+    mainImage: "/dashboards/Overall_Dashboard.PNG",
   },
 ];
 
@@ -91,7 +88,7 @@ const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress
         style={{ scale }}
         className="w-full h-full bg-[#0C0C0C] border-2 border-[#D7E2EA] rounded-[40px] sm:rounded-[50px] md:rounded-[60px] p-4 sm:p-6 md:p-8 flex flex-col justify-between overflow-hidden shadow-2xl"
       >
-        {/* Top Row Header - Clean with title, category, and live topmate link */}
+        {/* Top Row Header */}
         <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-[#D7E2EA]/20">
           <div className="flex items-center gap-4 sm:gap-6">
             <span
@@ -110,62 +107,56 @@ const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress
             </div>
           </div>
 
-          {/* Topmate Live Project Button */}
+          {/* Topmate Live Project Link */}
           {project.link && <LiveProjectButton href={project.link} />}
         </div>
 
         {/* Bottom Row Image Grid */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mt-4 h-full min-h-0">
-          {/* Left Column (40% width / 5 cols) - 2 stacked images */}
+          {/* Left Column (40% width / 5 cols) - Dynamically renders 1 to N real images */}
           <div className="md:col-span-5 flex flex-col gap-4 h-full">
-            <div
-              className="w-full rounded-[40px] sm:rounded-[50px] md:rounded-[60px] overflow-hidden flex-shrink-0"
-              style={{ height: 'clamp(130px, 16vw, 230px)' }}
-            >
-              <img
-                src={project.col1Img1}
-                alt={`${project.name} preview 1`}
-                className="w-full h-full object-cover rounded-[40px] sm:rounded-[50px] md:rounded-[60px]"
-                loading="lazy"
-              />
-            </div>
-
-            <div
-              className="w-full rounded-[40px] sm:rounded-[50px] md:rounded-[60px] overflow-hidden flex-grow"
-              style={{ height: 'clamp(160px, 22vw, 340px)' }}
-            >
-              <img
-                src={project.col1Img2}
-                alt={`${project.name} preview 2`}
-                className="w-full h-full object-cover rounded-[40px] sm:rounded-[50px] md:rounded-[60px]"
-                loading="lazy"
-              />
-            </div>
+            {project.images.map((imgSrc, imgIndex) => (
+              <div
+                key={imgIndex}
+                className="w-full rounded-[30px] sm:rounded-[40px] md:rounded-[50px] overflow-hidden flex-grow relative bg-[#141414] border border-[#D7E2EA]/10 shadow-md"
+                style={{
+                  height: project.images.length === 1 ? '100%' : 'calc(50% - 0.5rem)',
+                }}
+              >
+                <img
+                  src={imgSrc}
+                  alt={`${project.name} photo ${imgIndex + 1}`}
+                  className="w-full h-full object-cover rounded-[30px] sm:rounded-[40px] md:rounded-[50px]"
+                  loading="lazy"
+                />
+              </div>
+            ))}
           </div>
 
-          {/* Right Column (60% width / 7 cols) - Cleanly fitted HTML Dashboard view or tall image */}
-          <div className="md:col-span-7 h-full min-h-[220px] rounded-[40px] sm:rounded-[50px] md:rounded-[60px] overflow-hidden bg-[#0C0C0C] relative">
+          {/* Right Column (60% width / 7 cols) - Cleanly fitted HTML Dashboard without corner bleed */}
+          <div className="md:col-span-7 h-full min-h-[220px] rounded-[30px] sm:rounded-[40px] md:rounded-[50px] overflow-hidden bg-[#0C0C0C] relative border border-[#D7E2EA]/10 shadow-inner isolate">
             {project.htmlPath ? (
-              <div className="w-full h-full overflow-hidden rounded-[40px] sm:rounded-[50px] md:rounded-[60px]">
+              <div className="w-full h-full relative overflow-hidden rounded-[30px] sm:rounded-[40px] md:rounded-[50px] bg-[#0C0C0C] isolate">
                 <iframe
                   src={project.htmlPath}
-                  title={`${project.name} HTML Dashboard`}
-                  className="w-full h-full border-none rounded-[40px] sm:rounded-[50px] md:rounded-[60px] pointer-events-auto"
+                  title={`${project.name} HTML Rebuild`}
+                  className="w-[125%] h-[125%] border-0 scale-[0.8] origin-top-left rounded-[30px] sm:rounded-[40px] md:rounded-[50px] pointer-events-auto bg-[#0C0C0C]"
                   style={{
-                    width: '100%',
-                    height: '100%',
-                    border: '0',
+                    border: 'none',
+                    outline: 'none',
                   }}
                   loading="lazy"
                 />
               </div>
             ) : (
-              <img
-                src={project.col2Img}
-                alt={`${project.name} full preview`}
-                className="w-full h-full object-cover rounded-[40px] sm:rounded-[50px] md:rounded-[60px]"
-                loading="lazy"
-              />
+              project.mainImage && (
+                <img
+                  src={project.mainImage}
+                  alt={`${project.name} main preview`}
+                  className="w-full h-full object-cover rounded-[30px] sm:rounded-[40px] md:rounded-[50px]"
+                  loading="lazy"
+                />
+              )
             )}
           </div>
         </div>
