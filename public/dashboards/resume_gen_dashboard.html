@@ -43,13 +43,16 @@
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
+  html, body {
     font-family: 'Inter', -apple-system, sans-serif;
-    background-color: var(--bg-body);
+    background-color: #0C0C0C !important;
+    background: #0C0C0C !important;
     color: var(--text-primary);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    border-radius: 36px !important;
+    overflow: hidden !important;
     transition: background-color 0.2s ease, color 0.2s ease;
   }
 
