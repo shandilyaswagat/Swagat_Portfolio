@@ -4,6 +4,7 @@ import { MarqueeSection } from './components/sections/MarqueeSection';
 import { AboutSection } from './components/sections/AboutSection';
 import { ServicesSection } from './components/sections/ServicesSection';
 import { ProjectsSection } from './components/sections/ProjectsSection';
+import { ProductsSection } from './components/sections/ProductsSection';
 import { ContactSection } from './components/sections/ContactSection';
 
 export const App: React.FC = () => {
@@ -14,6 +15,7 @@ export const App: React.FC = () => {
       <AboutSection />
       <ServicesSection />
       <ProjectsSection />
+      <ProductsSection />
       <ContactSection />
     </main>
   );

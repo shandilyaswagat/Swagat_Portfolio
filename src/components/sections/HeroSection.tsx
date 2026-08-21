@@ -15,18 +15,19 @@ export const HeroSection: React.FC = () => {
   return (
     <section className="relative min-h-[100dvh] h-[100dvh] w-full flex flex-col justify-between overflow-x-clip bg-[#0C0C0C]">
       {/* Navbar */}
-      <FadeIn delay={0} y={-20} className="w-full px-4 sm:px-6 md:px-10 pt-5 sm:pt-6 md:pt-8 z-30">
-        <nav className="flex justify-between items-center w-full max-w-7xl mx-auto">
+      <FadeIn delay={0} y={-20} className="w-full px-3 sm:px-6 md:px-10 pt-4 sm:pt-6 md:pt-8 z-30">
+        <nav className="flex justify-between items-center w-full max-w-7xl mx-auto gap-2">
           {[
             { label: "About", id: "about" },
             { label: "Services", id: "services" },
             { label: "Projects", id: "projects" },
+            { label: "Products", id: "products" },
             { label: "Contact", id: "contact" },
           ].map((link) => (
             <button
               key={link.id}
               onClick={() => scrollToSection(link.id)}
-              className="text-[#D7E2EA] font-medium uppercase tracking-wider text-[11px] xs:text-xs sm:text-base md:text-lg lg:text-[1.4rem] hover:opacity-70 transition-opacity duration-200 cursor-pointer"
+              className="text-[#D7E2EA] font-medium uppercase tracking-wider text-[10px] xs:text-xs sm:text-base md:text-lg lg:text-[1.3rem] hover:opacity-70 transition-opacity duration-200 cursor-pointer"
             >
               {link.label}
             </button>
@@ -43,8 +44,8 @@ export const HeroSection: React.FC = () => {
         </FadeIn>
       </div>
 
-      {/* Hero Portrait - Positioned cleanly below title on mobile so text is 100% visible */}
-      <div className="absolute left-1/2 -translate-x-1/2 z-20 w-[220px] xs:w-[260px] sm:w-[350px] md:w-[440px] lg:w-[520px] bottom-36 sm:bottom-0 pointer-events-auto">
+      {/* Hero Portrait */}
+      <div className="absolute left-1/2 -translate-x-1/2 z-20 w-[200px] xs:w-[250px] sm:w-[350px] md:w-[440px] lg:w-[520px] bottom-28 xs:bottom-32 sm:bottom-0 pointer-events-auto">
         <FadeIn delay={0.6} y={30}>
           <Magnet
             padding={150}
@@ -63,34 +64,30 @@ export const HeroSection: React.FC = () => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="w-full px-4 sm:px-6 md:px-10 pb-5 sm:pb-8 md:pb-10 flex flex-col sm:flex-row justify-between items-center sm:items-end gap-4 z-30 max-w-7xl mx-auto">
+      <div className="w-full px-4 sm:px-6 md:px-10 pb-4 sm:pb-8 md:pb-10 flex flex-col sm:flex-row justify-between items-center sm:items-end gap-3 sm:gap-4 z-30 max-w-7xl mx-auto">
         <FadeIn delay={0.35} y={20} className="w-full sm:w-auto text-center sm:text-left">
-          <p className="text-[#D7E2EA] font-light uppercase tracking-wide leading-snug mx-auto sm:mx-0 max-w-[280px] sm:max-w-[240px] md:max-w-[300px]" style={{ fontSize: 'clamp(0.75rem, 1.3vw, 1.4rem)' }}>
+          <p className="text-[#D7E2EA] font-light uppercase tracking-wide leading-snug mx-auto sm:mx-0 max-w-[280px] sm:max-w-[240px] md:max-w-[300px] text-xs sm:text-sm md:text-base">
             a data analyst & automation specialist driven by crafting striking bi dashboards, web apps, and n8n workflows
           </p>
         </FadeIn>
 
-        <FadeIn delay={0.5} y={20} className="flex flex-row items-center justify-center sm:justify-end gap-3 sm:gap-4 w-full sm:w-auto">
-          {/* Download Resume Button */}
+        {/* Action Buttons: Resume Download & Contact Me */}
+        <FadeIn delay={0.45} y={20} className="flex items-center gap-2.5 sm:gap-3 flex-wrap justify-center sm:justify-end w-full sm:w-auto">
           <a
             href="/Swagat_DA.pdf"
             download="Swagat_Shandilya_Resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
             className="
-              inline-flex items-center justify-center gap-2 rounded-full 
-              border-2 border-[#D7E2EA] text-[#D7E2EA] font-medium uppercase tracking-widest 
-              px-5 py-2.5 sm:px-8 sm:py-3.5 md:px-12 md:py-4
-              text-[11px] sm:text-sm md:text-base
-              hover:bg-[#D7E2EA]/10
-              transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-lg
+              inline-flex items-center justify-center gap-1.5 rounded-full 
+              border-2 border-[#D7E2EA] bg-[#D7E2EA] text-[#0C0C0C] font-semibold uppercase tracking-widest 
+              px-4 py-2 sm:px-6 sm:py-3 md:px-7 md:py-3.5
+              text-[11px] sm:text-xs md:text-sm
+              hover:bg-white transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-lg
             "
           >
-            <Download className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-[#BBCCD7]" />
-            <span>Resume</span>
+            <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <span>Download Resume</span>
           </a>
 
-          {/* Contact Me Button */}
           <ContactButton onClick={() => scrollToSection('contact')} />
         </FadeIn>
       </div>

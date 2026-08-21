@@ -84,12 +84,12 @@ const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress
   return (
     <div
       ref={containerRef}
-      className="sticky top-24 md:top-32 h-[85vh] flex items-center justify-center mb-12 sm:mb-16"
-      style={{ top: `calc(6rem + ${index * 28}px)` }}
+      className="sticky top-20 sm:top-24 md:top-32 min-h-[80vh] md:h-[85vh] flex items-center justify-center mb-12 sm:mb-16"
+      style={{ top: `calc(5rem + ${index * 28}px)` }}
     >
       <motion.div
         style={{ scale }}
-        className="w-full h-full bg-[#0C0C0C] border-2 border-[#D7E2EA] rounded-[40px] sm:rounded-[50px] md:rounded-[60px] p-4 sm:p-6 md:p-8 flex flex-col justify-between overflow-hidden shadow-2xl"
+        className="w-full h-full bg-[#0C0C0C] border-2 border-[#D7E2EA] rounded-[30px] sm:rounded-[40px] md:rounded-[60px] p-4 sm:p-6 md:p-8 flex flex-col justify-between overflow-hidden shadow-2xl"
       >
         {/* Top Row Header */}
         <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-[#D7E2EA]/20">
@@ -110,8 +110,28 @@ const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress
             </div>
           </div>
 
-          {/* Topmate Live Project Button */}
-          {project.link && <LiveProjectButton href={project.link} />}
+          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
+            {/* PREVIEW Link for HTML Dashboards (Opens full browser tab) */}
+            {project.htmlPath && (
+              <a
+                href={project.htmlPath}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="
+                  inline-flex items-center justify-center
+                  rounded-full border-2 border-[#B600A8] bg-[#B600A8]/10 text-[#F3E5F5] font-medium uppercase tracking-widest 
+                  px-8 py-3 sm:px-10 sm:py-3.5
+                  text-xs sm:text-sm md:text-base
+                  hover:bg-[#B600A8]/25 hover:text-white transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer shadow-lg
+                "
+              >
+                <span>PREVIEW</span>
+              </a>
+            )}
+
+            {/* Topmate Live Project Button */}
+            {project.link && <LiveProjectButton href={project.link} />}
+          </div>
         </div>
 
         {/* Bottom Row Image Grid */}
@@ -147,29 +167,20 @@ const ProjectCard: React.FC<CardProps> = ({ project, index, totalCards, progress
             ))}
           </div>
 
-          {/* Right Column (60% width / 7 cols) - Fitted HTML Dashboard or Tall Image with Enlarge Button */}
-          <div className="md:col-span-7 h-full min-h-[220px] rounded-[30px] sm:rounded-[40px] md:rounded-[50px] overflow-hidden bg-[#0C0C0C] relative border border-[#D7E2EA]/10 shadow-inner isolate group">
+          {/* Right Column (60% width / 7 cols) - Clean HTML Dashboard Preview without expand overlay */}
+          <div className="md:col-span-7 h-full min-h-[220px] rounded-[30px] sm:rounded-[40px] md:rounded-[50px] overflow-hidden bg-[#0C0C0C] relative border border-[#D7E2EA]/10 shadow-inner isolate">
             {project.htmlPath ? (
               <div className="w-full h-full relative overflow-hidden rounded-[30px] sm:rounded-[40px] md:rounded-[50px] bg-[#0C0C0C] isolate">
                 <iframe
                   src={project.htmlPath}
                   title={`${project.name} HTML Rebuild`}
-                  className="w-[125%] h-[125%] border-0 scale-[0.8] origin-top-left rounded-[30px] sm:rounded-[40px] md:rounded-[50px] pointer-events-auto bg-[#0C0C0C]"
+                  className="w-[210%] h-[210%] sm:w-[130%] sm:h-[130%] md:w-[125%] md:h-[125%] border-0 scale-[0.47] sm:scale-[0.76] md:scale-[0.8] origin-top-left rounded-[30px] sm:rounded-[40px] md:rounded-[50px] pointer-events-auto bg-[#0C0C0C]"
                   style={{
                     border: 'none',
                     outline: 'none',
                   }}
                   loading="lazy"
                 />
-
-                {/* Enlarge Dashboard Button */}
-                <button
-                  onClick={() => onEnlarge(`${project.name}`, undefined, project.htmlPath)}
-                  className="absolute top-4 right-4 z-20 bg-black/80 hover:bg-[#B600A8] text-white p-2.5 rounded-full border border-white/20 transition-all cursor-pointer shadow-lg hover:scale-110"
-                  title="Enlarge"
-                >
-                  <Maximize2 className="w-4 h-4 text-white" />
-                </button>
               </div>
             ) : (
               project.mainImage && (

@@ -42,16 +42,20 @@
 
         /* App Shell Layout */
         .app-layout {
-            display: flex; width: 100vw; height: 100vh;
+            display: flex; width: 100vw; height: 100vh; flex-direction: row;
+        }
+
+        .ai-support-btn, [class*="ai-support"] {
+            display: none !important;
         }
 
         /* Sidebar */
         .sidebar {
-            width: 240px;
-            min-width: 240px;
+            width: 190px;
+            min-width: 190px;
             background-color: var(--bg-sidebar);
             border-right: 1px solid var(--border-subtle);
-            padding: 1.5rem 0.85rem;
+            padding: 1.2rem 0.75rem;
             display: flex; flex-direction: column;
             justify-content: space-between;
         }
